@@ -1,0 +1,65 @@
+---
+title: "YuHW00ST430"
+author: "Haozhe (Jerry) Yu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tinytex)
+```
+
+# Question 1
+
+>  The dataset sat.txt comes from a study entitled "Getting What You Pay For: The Debate 
+Over Equity in Public School Expenditures.'' 
+Make a numerical and graphical summary of the data, commenting on any features that you find interesting. 
+Make sure you write something about anything you choose to present. You are not expected to make any 
+substantive conclusions from the data.
+Do some short numerical summaries of the data, commenting on any features that you 
+find interesting.
+(Please follow the R Codes given in Prostate Data and Pima Data)
+
+First we input the SAT data from a local txt file. 
+
+
+```{r import}
+sat <-  as_tibble (read.delim2(
+  "Datasets/SAT.txt",
+  header = TRUE,
+  sep = "",
+  col.names = c("State", as.character(
+    read.delim2(
+      "Datasets/SAT.txt",
+      nrows = 1,
+      sep = "",
+      header = FALSE
+    )
+  ))
+))
+sat$expend <- 1000 * as.numeric(sat$expend)
+sat$salary <- 1000 * as.numeric(sat$salary)
+sat$ratio <- as.numeric(sat$ratio)
+sat
+```
+
+Then we run Pima and Prostate Style preanalysis.
+
+```{r analysis}
+summary(sat)
+
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
