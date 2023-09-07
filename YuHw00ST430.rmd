@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
 library(tinytex)
+library(tidyverse)
 ```
 
 # Question 1
@@ -23,23 +24,25 @@ Do some short numerical summaries of the data, commenting on any features that y
 find interesting.
 (Please follow the R Codes given in Prostate Data and Pima Data)
 
-First we input the SAT data from a local txt file. 
+First we input the SAT data from a local txt file. We did this because the sat.txt fromt he pdf had an error. 
 
 
-```{r import}
+```{r import, warning=FALSE}
+satnames <- read.delim2("Datasets/SAT.txt",
+                        nrows = 1,
+                        sep = "",
+                        header = FALSE) %>%
+  as.character()
+
+ssatnames <- c("State", satnames)
+
 sat <-  as_tibble (read.delim2(
   "Datasets/SAT.txt",
   header = TRUE,
   sep = "",
-  col.names = c("State", as.character(
-    read.delim2(
-      "Datasets/SAT.txt",
-      nrows = 1,
-      sep = "",
-      header = FALSE
-    )
-  ))
+  col.names = ssatnames
 ))
+
 sat$expend <- 1000 * as.numeric(sat$expend)
 sat$salary <- 1000 * as.numeric(sat$salary)
 sat$ratio <- as.numeric(sat$ratio)
@@ -48,18 +51,140 @@ sat
 
 Then we run Pima and Prostate Style preanalysis.
 
-```{r analysis}
+```{r analysis, warning=FALSE}
 summary(sat)
 
+#Boxplots
+
+create_boxplot <- function(data, v, xlab, q) {
+  ggplot(data = data, aes(x = "", y = !!sym(v))) +
+    geom_boxplot(color = "blue", outlier.color = "red") +
+    labs(title = paste("Boxplot of", v, "for Question", q),
+         subtitle = "by Jerry Yu") +
+    xlab(xlab) +
+    ylab("")
+}
+
+create_boxplot(
+  sat,
+  "expend",
+  "Current expenditure per pupil in average daily attendance\n in public elementary and secondary schools, 1994-95 (dollars)
+",
+"1"
+)
+
+create_boxplot(
+  sat,
+  "ratio",
+  "Average pupil/teacher ratio in public \n elementary and secondary schools, Fall 1994",
+  "1"
+)
+
+create_boxplot(
+  sat,
+  "salary",
+  "Estimated average annual salary of teachers in public \n elementary and secondary schools, 1994-95 (dollars) ",
+  "1"
+)
+
+create_boxplot(sat,
+               "takers",
+               "Percentage of all eligible students taking the SAT, 1994-95",
+               "1")
+
+create_boxplot(sat, "verbal", "Average verbal SAT score, 1994-95", "1")
+
+create_boxplot(sat, "math", "Average math SAT score, 1994-95", "1")
+
+create_boxplot(sat, "total", "Average total score on the SAT, 1994-95", "1")
+
+# Create Histogram
+
+create_histogram <- function(d, v, xlab, q) {
+  ggplot(data = d, aes(x = !!sym(v), fill = ..count..)) +
+    geom_histogram() +
+    scale_fill_gradient(low = "red", high = "blue") +
+    labs(title = paste("Histogram of", v, "for Question", q),
+         subtitle = "by Jerry Yu") +
+    xlab(xlab) +
+    ylab("Frequency")
+}
+
+create_histogram(
+  sat,
+  "expend",
+  "Current expenditure per pupil in average daily attendance\n in public elementary and secondary schools, 1994-95 (dollars)
+",
+"1"
+)
+
+create_histogram(
+  sat,
+  "ratio",
+  "Average pupil/teacher ratio in public \n elementary and secondary schools, Fall 1994",
+  "1"
+)
+
+create_histogram(
+  sat,
+  "salary",
+  "Estimated average annual salary of teachers in public \n elementary and secondary schools, 1994-95 (dollars) ",
+  "1"
+)
+
+create_histogram(sat,
+                 "takers",
+                 "Percentage of all eligible students taking the SAT, 1994-95",
+                 "1")
+
+create_histogram(sat, "verbal", "Average verbal SAT score, 1994-95", "1")
+
+create_histogram(sat, "math", "Average math SAT score, 1994-95", "1")
+
+create_histogram(sat, "total", "Average total score on the SAT, 1994-95 ", "1")
+
 ```
 
+From the preliminary data analysis, we see that almost all the distributions are right skewed. However, the degree of skew is more or less extreme depending on the variable, with some variables like expend having many more outliers than variables like math. The similar distributions suggest that the money based variables (like expend and ratio) might be positively correlated with the performance based variables (like math and total). The only exception to this general pattern is takers, which seems bimodal. This suggests that takers might be a confounding variable. 
 
-## Including Plots
+# Question 2
 
-You can also embed plots, for example:
+>The dataset press.txt for this assignment comes from some research into the production of textiles
+Do some short numerical and graphical summaries of the data, commenting on any 
+features that you find interesting.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r insert press, warning=FALSE}
+press <- read.table("http://www.stat.nthu.edu.tw/~swcheng/Teaching/stat5410/data/wrinkle.txt",header=TRUE)%>% as.tibble()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Preanalysis Chunk:
+
+```{r press analysis, warning=FALSE}
+summary(press)
+
+#boxplot
+create_boxplot(press, "press",
+               "durable press rating", "2")
+create_boxplot(press, "HCHO",
+               "formaldehyde concentration", "2")
+create_boxplot(press, "catalyst",
+               "catalyst ration", "2")
+create_boxplot(press, "temp",
+               "curing temperature", "2")
+create_boxplot(press, "time",
+               "curing time", "2")
+
+#histogram
+create_histogram(press, "press",
+                 "durable press rating", "2")
+create_histogram(press, "HCHO",
+                 "formaldehyde concentration", "2")
+create_histogram(press, "catalyst",
+                 "catalyst ration", "2")
+create_histogram(press, "temp",
+                 "curing temperature", "2")
+create_histogram(press, "time",
+                 "curing time", "2")
+```
+
+From our preanalysis, we see that our 5 variables generally fall into 3 distributions. Press is left skewed, HCHO is relatively symmetric, and catalyst, temp, and time are all strongly bimodal. Additionally, these data points seem more uniform, with no outliers for all 5 variables and Q3 = max temp and time. 
