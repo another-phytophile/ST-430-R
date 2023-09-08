@@ -2,7 +2,7 @@
 title: "YuHW00ST430"
 author: "Haozhe (Jerry) Yu"
 date: "`r Sys.Date()`"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +24,7 @@ Do some short numerical summaries of the data, commenting on any features that y
 find interesting.
 (Please follow the R Codes given in Prostate Data and Pima Data)
 
-First we input the SAT data from a local txt file. We did this because the sat.txt fromt he pdf had an error. 
+First we input the SAT data from a local txt file. We did this because the sat.txt from the pdf had an error. 
 
 
 ```{r import, warning=FALSE}
