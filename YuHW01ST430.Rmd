@@ -1,0 +1,53 @@
+---
+title: "YuHW01ST430"
+author: "Haozhe (Jerry) Yu"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tinytex)
+library(reticulate)
+```
+
+# Question 1
+
+>1. A regression analysis relating test scores (Y) to training hours (X)  produced the following fitted equation: 𝑦̂ = 25 − 0.5𝑥.
+
+
+>a. What is the fitted value of the response variable corresponding to  x = 7?
+
+  25 - 0.5(7) = **3.5**
+  
+> b. What is the residual corresponding to the data point with x = 3 and  y = 30? Is the point above or below the line? Why?
+
+  30-[25-(0.5*3)]= 6.5. The point is above the regression line because 30 > 23.5. 
+  
+> c. If x increases 3 units, how does 𝑦̂ change?
+
+  ŷ decreases by 1.5.
+  
+d. An additional test score is to be obtained for a new observation at 
+x = 6. Would the test score for the new observation necessarily be 22? 
+Explain.
+e. The error sums of squares (SSE) for this model was found to be 7. If 
+there were n = 16 observations, provide the best estimate for 𝜎
+2
+.
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
