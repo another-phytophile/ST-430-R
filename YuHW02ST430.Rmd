@@ -2,7 +2,9 @@
 title: "YuHW02ST430"
 author: "Haozhe (Jerry) Yu"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: 
+  pdf_document:
+    latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}
@@ -32,20 +34,6 @@ actgpam <- lm(GPA~ ACT,data=actgpa)
 sactgpam <- summary(actgpam)
 
 # Questions Answered will be with in-line code. I will provide an example of the inline code I use to demonstrate understanding of topnics when necessary. 
-
-str(sactgpam)
-sactgpam
-sactgpam$sigma
-sactgpam$df[2]
-
-help("tibble")
-
-
-str(confint(actgpam,level = 0.95))
-
-confint(actgpam,level = 0.95)[2,2]
-
-confint(actgpam,level = 0.95)
 ```
 ### a. What is the estimate of $\sigma$ from this analysis?
 
@@ -55,19 +43,16 @@ Example inline code: `sactgpam$sigma`
 
 ### b. Give a point estimate and 95% confidence interval for the slope and interpret each of these in words.
 
-The 95% confidence interval for the slope is `r confint(actgpam,level = 0.95)[2,1]` to `r confint(actgpam,level = 0.95)[2,2]`. This indicates that 95% of intervals from samples of the same size will contain $\beta_1$.
+The point estimate for the slope is `r sactgpam[[4]][2,1]` and the 95% confidence interval for the slope is `r confint(actgpam,level = 0.95)[2,1]` to `r confint(actgpam,level = 0.95)[2,2]`. This indicates that 95% of intervals from samples of the same size will contain $\beta_1$.
 
 ### c. Give a point estimate and 95% confidence interval for the y-intercept.
 
-The 95% confidence interval for the y-intercept is `r confint(actgpam,level = 0.95)[1,1]` to `r confint(actgpam,level = 0.95)[1,2]`. This indicates that 95% of intervals from samples of the same size will contain $\beta_0$.
+The point estimate for the slope is `r sactgpam[[4]][1,1]` and the  95% confidence interval for the y-intercept is `r confint(actgpam,level = 0.95)[1,1]` to `r confint(actgpam,level = 0.95)[1,2]`. This indicates that 95% of intervals from samples of the same size will contain $\beta_0$.
 
 d. Obtain a 95% interval estimate of the mean GPA for students whose ACT test score is 28. Interpret your confidence interval.
 
 ```{r babysfirstpredict}
 oned <- tibble(ACT=25)
-predict(actgpam,oned,interval="confidence",level=0.95) #%>% str()
-predict(actgpam,oned,interval="predict",level=0.95)
-predict(actgpam,oned,interval="confidence",level=0.95)[2]
 ```
 The 95% confidence interval for students whose ACT score is 28 is `r predict(actgpam,oned,interval="confidence",level=0.95)[2]` to `r predict(actgpam,oned,interval="confidence",level=0.95)[3]`. This indicates that 95% of intervals from samples of the same size will contain the true mean GPA of students whose ACT is 28.
 
@@ -81,21 +66,191 @@ No. It would not be reasonable to consider inference on the intercept for this p
 
 ### g. For each of the following hypothesis tests, give the value of the test statistic, the degrees of freedom, the p-value (if you cannot obtain the pvalue, give the critical value for the test statistic), and clearly state your conclusion.
 
+```{r ptable}
+#get t values for hypothesis testing
+t0 <- summary(actgpam)[[4]][2,3]
+p20 <- summary(actgpam)[[4]][2,4]
+actgpam07 <- lm(GPA~ACT,data = actgpa,offset = 0.07*ACT)
+t07 <- summary(actgpam07)[[4]][2,3]
+p207 <- summary(actgpam07)[[4]][2,4]
+
+pv <- as.data.frame(do.call(rbind, list(
+  c("2 sided, 0.00",
+    p20, 
+    "as p <0.05, we reject H0 that beta1 =0 at alpha =0.05"),
+  c("lower tail, 0.00",
+    pt(t0,117,lower.tail = TRUE),
+    "as p >0.05, we fail to reject H0 that beta1 = 0 at alpha=0.05"),
+  c("upper tail, 0.00",
+    pt(t0,117,lower.tail = FALSE),
+    "as p <0.05, we reject H0 that beta1 = 0 at alpha=0.05"),
+  c("2 sided, 0.07",
+    p207,
+    "as p <0.05, we reject H0 that beta1 = 0.07 at alpha =0.05"),
+  c("lower tail, 0.07",
+    pt(t07,117,lower.tail = TRUE),
+    "as p <0.05, we reject H0 that beta1 = 0.07 at alpha=0.05"),
+  c("upper tail, 0.07",
+    pt(t07,117,lower.tail = FALSE),
+    "as p >0.05, we fail to reject H0 that beta1 = 0.07 at alpha=0.05")
+)))
+names(pv) <- c("Hypothesis","p-value", "Conclusion")
+as_tibble(pv)
+pv
+```
+
+# Question 2
+
+> For this problem use the “plastic hardness” data described in the text with problem 1.22 on page 36. Make sure you understand which column is X and which is Y and read in the data accordingly. 
+
+```{r plasticinport}
+phard <- as_tibble(read.table("https://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR22.txt", 
+            sep = "", 
+            strip.white=TRUE,
+            col.name = c("Hardness_Brinell","Hrs_Elapsed")
+            ))
+
+phard
+```
+
+### a) Run the linear regression to predict hardness from time and state the estimated regression equation. Give a 95% confidence interval for the slope. Explain to someone not familiar with statistics what this confidence interval means. Remember that time is measured in hours and hardness is measured in Brinell units. 
+
+```{r plm}
+
+plm <- lm(Hardness_Brinell~Hrs_Elapsed,data=phard)
+```
+
+The 95% confidence interval for the slope is `r confint(plm,level = 0.95)[2,1]` to `r confint(plm,level = 0.95)[2,2]`. What this means is that if you were to take tons more items of plastic from each batch, we would estimate that for 95% of those batches, the actual rate of increase in hardness in Brinell units per hour would be in this interval. So basically, if we were to repeat this experiment an infinite amount of times, 95% of the confidence interval we get in each experiment will contain the actual slope of the plastic's increase in strength. 
+
+### b) Describe the results of the significance test for the slope that you get in your **software output**. State the hypotheses being tested, the test statistic with degrees of freedom, the P-value, and your conclusion in a brief sentence. 
+
+We are testing the 2 tailed hypothesis with an H0 that that slope =0 (not linear) and an Ha that the slope =/= 0, as our test statistic is 22.51 with 14 degrees of freedom, we get a p value of 2.163-12, allowing us to reject our null hypothesis. 
+
+### c) c) Explain why or why not inference on the intercept is reasonable (i.e., of interest) in this case.
+
+Inference on the intercept is not reasonable as you would not feasibly use plastic before allowing it to cool off. 
+
+### d) Continue with the same dataset. Give an estimate of the mean hardness that you would expect after 36 and 43 hours, and a 95% confidence interval for each estimate. Which confidence interval is wider and why is it wider? 
+
+```{r ppred}
+f3 <- tibble(Hrs_Elapsed=c(36,43))
+
+pci <- predict(plm,f3,interval="confidence",level=0.95)
+pconf <- tibble(
+  Hrs_Elapsed =f3[["Hrs_Elapsed"]],
+  Estimated_Mean = pci[, "fit"],
+  Lower_Bound = pci[, "lwr"],
+  Upper_Bound = pci[, "upr"]
+)
+pconf
+```
+
+The confidence interval for for 43 hours is wider as 43 is farther from the center of our data. As Variance is a quadratic function it grows as we get farther away from the center. 
+
+### e) Again, using the same dataset, give a prediction for the hardness that you would expect for an individual piece of plastic after 43 hours; and a 95% prediction interval for this quantity. 
+
 ```{r}
-help("pt")
-summary(actgpam)
+pp <- predict(plm, f3[2, 1], interval = "predict", level = 0.95)
+
+ppred <- tibble(
+  Hrs_Elapsed = f3[[2, 1]],
+  Predicted_Hardness = pp[, "fit"],
+  Lower_Bound = pp[, "lwr"],
+  Upper_Bound = pp[, "upr"]
+)
+
+ppred
 ```
 
+Hardness is in Brinell units. 
 
+# Question 3
 
-## Including Plots
+>An investigative study collected 40 observations from the Wabash river at random locations near Lafayette. Each observation consisted of a measure of water pH (X) and fish count (Y). The researchers are interested in how the acidity of the water affects the number of fishes. Complete the following ANOVA table for the regression analysis. State the null and alternative hypotheses for the F-test as well as your conclusion in sentence form. You may use the critical F (critical t) approach or the p-value approach.
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-currentc <- c(0,11,10,10,21,21,20)
-today <- sample(currentc,1)
-today
+```{r}
+q3 <- tibble(
+  "Source" = c("Model","Error","Corrected Total"),
+  "degrees of freedom" = c(1,38,39),
+  "Sum of Squares" = c(55.30,4.70,60.00),
+  "Mean Square" = c(55.30,4.70/38,NA),
+  "F-value" = c(55.30/(4.70/38),NA,NA),
+  "P-value" = c(pf(55.30/(4.70/38),1,38),NA,NA)
+)
+q3
+pf(447.1064,1,38)
+4.7/38
+55.30/0.1236842
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Question 4
+> 4. For this problem, use the surgical unit data described in KNNL. Page  350 and table # 9.1. CH09TA01
+
+>A hospital surgical unit was interested in predicting survival in patients undergoing a particular type of liver operation. A random selection of 54 patients was available for analysis. From each patient record, the following information was extracted from the pre-operation evaluation.
+
+- Original data: 108 patients
+- Preliminary study: the first 54 patients with the first four variables
+
+Variables:
+- X1: blood clotting score
+- X2: prognostic index
+- X3: enzyme function test score
+- X4: liver function test score
+- X5: age, in years
+- X6: indicator variable for gender (0=male; 1=female)
+- X7 and X8: indicator variables for history of alcohol use:
+
+The response variable (Y) was the number of weeks the patients survived after the operation. 
+
+Read these variables into R
+
+```{r provided code}
+surg.data <- read.table(
+  "Datasets/Surgical Unit.txt",
+  header = FALSE,
+  col.names = c(
+    "clot",
+    "PI",
+    "enzy",
+    "liver",
+    "age",
+    "gender",
+    "mod_use",
+    "heavy_use",
+    "sur_time",
+    "ln_sur_time"
+  )
+)
+
+attach(surg.data)
+gender = factor(gender)
+
+surg.data1 <- surg.data[, seq(1, 4)] # new data set
+
+surm <- lm(sur_time~clot,surg.data1)
+
+ssurm <- summary(surm)
+
+cp <- tibble(clot=7.5)
+```
+
+### a. What is the estimate of σ from this analysis?
+
+The estimate for $\sigma$ is `r surm$sigma` with `r surm$df[2]` degrees of freedom. 
+
+### b. Give a point estimate and 95% confidence interval for the slope and interpret each of these in words.
+
+The point estimate of for the slope is `r ssurm[[4]][2,1]` and the 95% confidence interval for the slope is `r confint(surm,level = 0.95)[2,1]` to `r confint(surm,level = 0.95)[2,2]`. This indicates that 95% of intervals from samples of the same size will contain $\beta_1$.
+
+### c. Give a point estimate and 95% confidence interval for the y-intercept.
+
+The point estimate for the slope is `r ssurm[[4]][1,1]` and the  95% confidence interval for the y-intercept is `r confint(surm,level = 0.95)[1,1]` to `r confint(surm,level = 0.95)[1,2]`. This indicates that 95% of intervals from samples of the same size will contain $\beta_0$.
+
+### d. Obtain a 95% interval estimate of the mean sur_time for patients whose clot score is 7.5. Interpret your confidence interval.
+
+The 95% confidence interval for patients whose clot score is 7.5 is `r predict(surm,cp,interval="confidence",level=0.95)[2]` to `r predict(surm,cp,interval="confidence",level=0.95)[3]`. This indicates that 95% of intervals from samples of the same size will contain the true mean survival time of patients with a clot score of 7.5.
+
+
+### e. Predict sur_time using a 95% prediction interval for patients whose clot score is 7.5.
+
+The 95% prediction interval for patients whose clot score is 7.5 is `r predict(surm,cp,interval="predict",level=0.95)[2]` to `r predict(surm,cp,interval="predict",level=0.95)[3]`. 

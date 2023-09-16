@@ -55,6 +55,10 @@ cement <-
   tibble("sevendaystrength" = sevendaystrength,
          "twentyeightdaystrength" = twentyeightdaystrength)
 cement
+
+cementm <- lm(twentyeightdaystrength~sevendaystrength,data=cement)
+cementn <- data.frame(sevendaystrength=2000)
+predict(cementm,cementn,interval=c("none","confidence","prediction"),level=0,95,se.fit = TRUE)
 ```
 
 ```{r values}
