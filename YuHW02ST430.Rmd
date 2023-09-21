@@ -32,11 +32,12 @@ actgpa
 actgpam <- lm(GPA~ ACT,data=actgpa)
 
 sactgpam <- summary(actgpam)
+
 # Questions Answered will be with in-line code. I will provide an example of the inline code I use to demonstrate understanding of topnics when necessary. 
 ```
 ## a. What is the estimate of sigma from this analysis?
 
-The estimate for $\sigma$ is `r sactgpam$sigma` with `r sactgpam$df[2]` degrees of freedom. 
+The estimate for $\sigma$ is `r sactgpam$sigma` with `r sactgpam$"sigma"` degrees of freedom. 
 
 Example inline code: `sactgpam$sigma`
 

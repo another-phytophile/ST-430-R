@@ -11,6 +11,7 @@ output:
 library(ggplot2)
 library(ggpmisc)
 library(dplyr)
+library(tidyverse)
 library(tinytex)
 library(usethis)
 library(lmtest)
@@ -33,8 +34,6 @@ educ
 
 ```{r model}
 educm <- lm(Crime.Rate~High.School.Diploma,data=educ)
-
-str(educm)
 ```
 
 The equation to predict crime rate (per 100,000 residents) from the percent of individuals in a country with at least a high school diploma is 
@@ -43,79 +42,535 @@ Crime Rate = `r educm$coefficient[1]` + `r educm$coefficient[2]`High School Perc
 
 ## b. Give the ANOVA Table for this regression analysis. [Paste R or SAS output]
 
+```{r anova1}
+
+educma <- anova(educm)
+
+educma
+```
+
 ## c. Find SSE and MSE for this model.
 
-## d. What is the estimate of σ from this analysis?
+The SSE for this model is `r educma$"Sum Sq"[2]` and the MSE is `r educma$"Mean Sq"[2]`.
+
+## d. What is the estimate of sigma from this analysis?
+
+The estimate of $\sigma$ for this analysis is `r educma$"Mean Sq"[2] %>% sqrt()`
 
 ## e. What percent of the variation in crime rates can be explained by the percent of high school graduates?
 
+The percent of variation in crime rates explained by the percent of high school grads is `r educma$"Sum Sq"[1]/(educma$"Sum Sq"[1] + educma$"Sum Sq"[2])`
+
 ## f. What is the correlation between crime rates and percent of high school graduates?
+
+The correlation between crime rates and percent of high school graduates is `r -sqrt(educma$"Sum Sq"[1]/(educma$"Sum Sq"[1] + educma$"Sum Sq"[2]))`
 
 ## g. Based on your ANOVA table, is the linear relationship between X and Y statistically significant? Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
 
+- H0:  There is no linear relationship between crime rates and percent of high school graduates ($\beta_1$ =0)
+
+- HA:  There is a linear relationship between crime rates and percent of high school graduates ($\beta_1$ ne 0)
+
+- Test Statistic (F value): `r educma$"F value"[1]`
+
+- Degrees of Freedom: 1 for the model (High School Diploma Percent), and 82 for the error. 
+
+- P value: `r educma$"Pr(>F)"[1]`
+
+As p < 0.05, we reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence for a linear relationship between crime rate and percent of high school graduates. 
+
 ## h. Give a scatter plot of crime rates vs. percent of high school graduates, with the regression line. Comment about linearity 
+
+```{r scatter1}
+ggplot(educ,aes(x=High.School.Diploma,y=Crime.Rate))+
+  geom_jitter(color="turquoise")+
+  geom_smooth(method='lm', formula= y~x, 
+              se=FALSE,
+              show.legend=TRUE)+
+    stat_poly_eq(eq.with.lhs = "italic(hat(y))~`=`~",
+               use_label(c("eq", "R2")))+
+  labs(title = paste("Scatterplot of Crime Rate and Percent of High School Graduates \n with Linear Regression Line and Equation"),
+         subtitle = "by Jerry Yu")+ 
+  theme(plot.title = element_text(size = 12))
+```
+As there does not seem to be a nonlinear pattern in the scatterplot, and the regression line seems to slice across the residuals equally, leaving about 1/2 above and below. I would say that the data seems linear. 
 
 ## i. Give the Residual Plot (residuals vs. fitted values). Test for Non-Linear and Non-constant variance.
 
+```{r fitplot1}
+
+educmr <- tibble(
+  "fit" = educm$fitted.values,
+  "resid" = educm$residuals
+)
+
+ggplot(educmr,aes(x=fit,y=resid))+
+  geom_jitter(color="salmon")+
+  geom_hline(yintercept = 0, linetype="dotted")+
+  labs(title = paste("Residuals Versus Fitted Values for the Educ Data Set"),
+         subtitle = "by Jerry Yu")+ 
+  theme(plot.title = element_text(size = 14))
+```
+
+As there do not seem to be patterns in the distribution of the residuals, nor any fan and funnel shapes, I conclude that the variance is likely linear and constant. 
+
 ## j. Conduct Breusch-Pagan Test for the constancy of the error variance. Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
+
+```{r bp1}
+educmbp <- bptest(educm,studentize = FALSE)
+educmbp
+ncvTest(educm)
+```
+
+- H0: Equal Variance Among Errors
+
+- HA: Unequal Variance Among Errors
+
+- Degree of Freedom: `r educmbp$parameter[1]` 
+
+- P Value: `r educmbp$p.value`
 
 ## k. Index Plot to test for Independence of errors.
 
+```{r}
+ggplot(educmr, aes(x = 1:length(resid), y = resid)) +
+  geom_point(color = "aquamarine") +
+  labs(x = "Index",
+       title = "Residual Time Sequence Plot for Educ Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "dotdash")
+```
+
 ## l. Conduct Durbin-Watson Test. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value.
+
+```{r}
+dwtest(educm)
+educmw <-durbinWatsonTest(educm)
+educmw
+```
+
+- H0: Errors are uncorrelated over time
+
+- HA: Errors are correlated (either positive or negative). I used the `car` test where the alternative hypothesis is 2 sided
+
+- Test Statistic: `r educmw$dw`
+
+- p value: `r educmw$p`
 
 ## m. Outlier deduction test [Plot standardized Residuals versus fitted values]
 
+```{r outlier1}
+educmrs <- add_column(educmr, "rstandardized"=rstandard(educm))
+
+ggplot(educmrs, aes(x = fit, y = rstandardized)) +
+  geom_point(color = "lightgreen") +
+  labs(x = "Index",
+       title = "Outlier Detection Plot with Standarized Residuals vs Fit",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "solid") +
+    geom_hline(yintercept = -2,
+             color = "blue",
+             linetype = "dashed")+
+  geom_hline(yintercept = 2,
+             color = "blue",
+             linetype = "dashed")
+
+educmro <- filter(educmrs,abs(rstandardized) >2)
+educmro
+```
+
+We have 2 outliers, one where the fit = `r educmro[[1,1]]` and `r educmro[[2,1]]`
+
 ## n. Give a Histogram of the residuals and the density curve. Comment about the distribution of residuals.
 
+```{r warning=FALSE}
+ggplot(data = educmrs, aes(x = resid, y = after_stat(density))) +
+  geom_histogram(fill = "lightblue") +
+  geom_density(color = "darkgreen") +
+  labs(
+    title = paste("Histogram and Density Plot of Residuals for Data Set Educ"),
+    subtitle = "by Jerry Yu"
+  ) +
+  ylab("Density of Residuals")
+```
+
+There seems to be a slight right skew in the data, The 2 outliers detected in part m are clearly visible. 
 
 ## o. Give a QQ-plot of the residuals to test for normality of error terms. Comment about the distribution of residuals.
 
+```{r qq1}
+ggplot(data = educmrs, aes(sample = resid))+
+  geom_qq( color="coral")+
+  geom_qq_line( color="turquoise")+
+  labs(
+    title = paste("QQ Plot of Residuals for Educ Linear Regression Model"),
+    subtitle = "by Jerry Yu"
+  ) +
+  xlab("Theoretical Quantiles")+
+  ylab("Sample Quantiles")
+```
+
+The data visually does not look normal, as the extreme Residuals both look flatter than the Theoretical Residuals (the line). 
+
 ## p. Conduct a Shapiro-Wilk Test on the residuals. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value. Give the p-value for this test and explain what this means in terms of our model assumptions.
+
+```{r shapiro1}
+shap1 <- shapiro.test(educmrs$resid)
+shap1
+```
+
+- H0: The random error is normally distributed
+
+- Ha: The random error is not normally distributed 
+
+- Test Statistic: `r shap1$statistic`
+
+- p value: `r shap1$p.value`
+
+As p > 0.05, we fail to reject H0 at $\alpha$ = 0.05 and conclude that there is no statistically significant evidence that the random error is not normally distributed. 
 
 # Question 2
 
+> 2.Download the “Explosives dataset” from Moodle. Fit a simple linear regression, relating the deflection of 
+galvonometer (Y) to the area of the wires on the coupling (X). Complete the following parts. 
+
+```{r import2}
+xplode <- as_tibble(read.table("Datasets/explosives.txt", 
+            strip.white=TRUE,
+            col.name = c("Coupling.Number","Wire.Area","Galvonometer")
+            ))
+xplode
+```
+
 ## a. Give a scatter plot 
+
+```{r scatter2}
+ggplot(xplode,aes(x=Wire.Area,y=Galvonometer))+
+  geom_jitter(color="salmon")+
+  labs(title = paste("Scatterplot of Wire Area and Galvonometer Deflection"),
+         subtitle = "by Jerry Yu")
+```
+
 
 ## b. Find the least squares regression.
 
+```{r model2}
+xplodem <- lm(Galvonometer~Wire.Area,xplode)
+xplodem
+```
+
 ## c. Give the Residual Plot (residuals vs. fitted values). Test for Non-Linear and Non-constant variance.
+
+```{r fitplot2}
+
+xplodemr <- tibble(
+  "fit" = xplodem$fitted.values,
+  "resid" = xplodem$residuals
+)
+
+ggplot(xplodemr,aes(x=fit,y=resid))+
+  geom_jitter(color="yellowgreen")+
+  geom_hline(yintercept = 0, linetype="dotted")+
+  labs(title = paste("Residuals Versus Fitted Values for the Xplode Data Set"),
+         subtitle = "by Jerry Yu")+ 
+  theme(plot.title = element_text(size = 12))
+```
+
+There does seem to be a pattern the the distribution of residuals and fitted values, with mostly positive residuals between 75 and 100 and 160-175, and mostly negative between 100 and 160. This might indicate that the variance is not linear. However, the pattern of the variances does not assume the shape of a funnel, so there is no evidence that the variance is non constant. However, as there are relatively few data points, we cannot conclude anything from the residual plot, and will rely on the Breusch-Pagan Test in part d. 
 
 ## d. Conduct Breusch-Pagan Test for the constancy of the error variance.
 
+```{r bp2}
+xplodembp <- bptest(xplodem,studentize = FALSE)
+xplodembp
+ncvTest(xplodem)
+```
+
 ## e. Index Plot to test for Independence of errors.
+
+```{r index2}
+ggplot(xplodemr, aes(x = 1:length(resid), y = resid)) +
+  geom_point(color = "aquamarine") +
+  labs(x = "Index",
+       title = "Residual Time Sequence Plot for xplode Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "dotdash")
+```
 
 ## f. Conduct Durbin-Watson Test.
 
+```{r dw2}
+dwtest(xplodem)
+xplodemw <-durbinWatsonTest(xplodem)
+xplodemw
+```
+
 ## g. outlier deduction test. [Plot standardized Residuals versus fitted values]
 
-## h. Give a Histogram of the residuals.
+```{r}
+xplodemrs <- add_column(xplodemr, "rstandardized"=rstandard(xplodem))
+
+ggplot(xplodemrs, aes(x = fit, y = rstandardized)) +
+  geom_point(color = "lightgreen") +
+  labs(x = "Index",
+       title = "Outlier Detection Plot with Standarized Residuals vs Fit for Xplode Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "solid") +
+    geom_hline(yintercept = -2,
+             color = "blue",
+             linetype = "dashed")+
+  geom_hline(yintercept = 2,
+             color = "blue",
+             linetype = "dashed")
+
+xplodemro <- filter(xplodemrs,abs(rstandardized) >2)
+xplodemro
+```
+
+We have 1 outlier where the fit = ` r xplodemro[[1,1]]`.
 
 ## i. Give a QQ-plot of the residuals. Normality of error terms.
 
+```{r qq2}
+ggplot(data = xplodemrs, aes(sample = resid))+
+  geom_qq( color="coral")+
+  geom_qq_line( color="turquoise")+
+  labs(
+    title = paste("QQ Plot of Residuals for Xplode Linear Regression Model"),
+    subtitle = "by Jerry Yu"
+  ) +
+  xlab("Theoretical Quantiles")+
+  ylab("Sample Quantiles")
+```
+
 ## j. Conduct a Shapiro-Wilk Test on the residuals. Give the p-value for this test and explain what this means in terms of our model assumptions.
+
+```{r shap2}
+xplodeshap <- shapiro.test(xplodemrs$resid)
+xplodeshap
+```
+- H0: The random error is normally distributed
+
+- Ha: The random error is not normally distributed
+
+- p value: `r xplodeshap$p.value`.
+
+As p > 0.05, we fail to reject H0 at $\alpha$ = 0.05 and conclude that there is no statistically significant evidence that the random error is not normally distributed.
 
 ## k. Give the ANOVA Table for this regression analysis. Based on your ANOVA table, is the linear relationship between X and Y statistically significant? Be sure to give an appropriate test statistic, its associated degrees of freedom, and the p-value.
 
+```{r anova2}
+xplodema <- anova(xplodem)
+
+xplodema
+```
+
+- H0:  There is no linear relationship between Wire Area (1/100,000 in) and Deflection of Galvonometer in mm ($\beta_1$ =0)
+
+- H0:  There is a linear relationship between Wire Area (1/100,000 in) and Deflection of Galvonometer in mm ($\beta_1$ ne 0)
+
+- Test Statistic (F value): `r xplodema$"F value"[1]`
+
+- Degrees of Freedom: 1 for the model (Area of Wires (1/100,000 in)), and 20 for the error. 
+
+- P value: `r xplodema$"Pr(>F)"[1]`
+
+As p < 0.05, we reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence for a linear relationship between Wire Area (1/100,000 in) and Deflection of Galvonometer in mm. 
+
+```{r import 3}
+surg.data <- read.table(
+  "Datasets/Surgical Unit.txt",
+  header = FALSE,
+  col.names = c(
+    "clot",
+    "PI",
+    "enzy",
+    "liver",
+    "age",
+    "gender",
+    "mod_use",
+    "heavy_use",
+    "sur_time",
+    "ln_sur_time"
+  )
+)
+
+attach(surg.data)
+gender = factor(gender)
+
+surg.datam <- lm(sur_time~clot,data=surg.data)
+
+surg.datam
+
+surg.dataa <- anova(surg.datam)
+
+surg.dataa
+```
 
 # Question 3
 
 ## a. Based on your ANOVA table, is the linear relationship between X and Y statistically significant? Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
 
+- H0:  There is no linear relationship between survival time and blood clotting score ($\beta_1$ =0)
+
+- HA:  There is a linear relationship between survival time and blood clotting score ($\beta_1$ ne 0)
+
+- Test Statistic (F value): `r surg.dataa$"F value"[1]`
+
+- Degrees of Freedom: 1 for the model (Blood-clotting score), and 52 for the error. 
+
+- P value: `r surg.dataa$"Pr(>F)"[1]`
+
+As p < 0.05, we reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence for a linear relationship between  blood clotting score and survival time. 
+
 ## b. Give a scatter plot of clot vs. sur_time, with the 
 regression line. Comment about linearity 
 
+```{r scatter3}
+ggplot(surg.data,aes(x=clot,y=sur_time))+
+  geom_jitter(color="turquoise")+
+  geom_smooth(method='lm', formula= y~x,
+              se=FALSE,
+              show.legend=TRUE)+
+    stat_poly_eq(eq.with.lhs = "italic(hat(y))~`=`~",
+               use_label(c("eq", "R2")))+
+  labs(title = paste("Scatterplot of Clotting Score and Survival Time \n with Linear Regression Line and Equation"),
+         subtitle = "by Jerry Yu")
+```
+
+I would say that the distributions of residuals above and below the regression line look somewhat even. However there is a noticeable funnel pattern, but that is indicative of heteroscedasticity, not non-linearity. 
+
 ## c. Give the Residual Plot (residuals vs. fitted values). Test for Non-Linear and Non-constant variance.
+
+```{r resid3}
+surg.datamr <- tibble(
+  "fit" = surg.datam$fitted.values,
+  "resid" = surg.datam$residuals
+)
+
+ggplot(surg.datamr,aes(x=fit,y=resid))+
+  geom_jitter(color="salmon")+
+  geom_hline(yintercept = 0, linetype="dotted")+
+  labs(title = paste("Residuals Versus Fitted Values for the surg.data Data Set"),
+         subtitle = "by Jerry Yu")+
+  theme(plot.title = element_text(size = 14))
+```
 
 ## d. Conduct Breusch-Pagan Test for the constancy of the error variance. Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
 
+```{r bp3}
+surg.datambp <- bptest(surg.datam,studentize = FALSE)
+ncvTest(surg.datam)
+```
+- H0: Equal Variance Among Errors
+- HA: Unequal Variance Among Errors
+- Degree of Freedom: `r surg.datambp$parameter[1]`
+- P Value: `r surg.datambp$p.value`
+
 ## e. Index Plot to test for Independence of errors.
+
+```{r index3}
+ggplot(surg.datamr, aes(x = 1:length(resid), y = resid)) +
+  geom_point(color = "aquamarine") +
+  labs(x = "Index",
+       title = "Residual Time Sequence Plot for Surgical Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "dotdash")
+```
 
 ## f. Conduct Durbin-Watson Test. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value.
 
+```{r dw3}
+dwtest(surg.datam)
+surg.datamw <-durbinWatsonTest(surg.datam)
+surg.datamw
+```
+
+- H0: Errors are uncorrelated over time
+
+- HA: Errors are correlated (either positive or negative). I used the `car` test where the alternative hypothesis is 2 sided
+
+- Test Statistic: `r surg.datamw$dw`
+
+- p value: `r surg.datamw$p`
+
 ## g. Outlier deduction test [Plot standardized Residuals versus fitted values]
+
+```{r out3}
+surg.datamrs <- add_column(surg.datamr, "rstandardized"=rstandard(surg.datam))
+
+ggplot(surg.datamrs, aes(x = fit, y = rstandardized)) +
+  geom_point(color = "lightgreen") +
+  labs(x = "Index",
+       title = "Outlier Detection Plot with Standarized Residuals vs Fit",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "solid") +
+    geom_hline(yintercept = -2,
+             color = "blue",
+             linetype = "dashed")+
+  geom_hline(yintercept = 2,
+             color = "blue",
+             linetype = "dashed")
+
+surg.datamro <- filter(surg.datamrs,abs(rstandardized) >2)
+surg.datamro
+```
+
+We have 4 outliers, shown in the table `surg.datamro`.
 
 ## h. Give a Histogram of the residuals and the density curve. Comment about the distribution of residuals.
 
+```{r resid3}
+ggplot(data = surg.datamrs, aes(x = resid, y = after_stat(density))) +
+  geom_histogram(fill = "lightblue") +
+  geom_density(color = "darkgreen") +
+  labs(
+    title = paste("Histogram and Density Plot of Residuals for Data Set surg.data"),
+    subtitle = "by Jerry Yu"
+  ) +
+  ylab("Density of Residuals")
+```
+
+There seems to be a slight right skew in the data, 3 of the 4 outliers detected in part g are clearly visible.
+
 ## i. Give a QQ-plot of the residuals to test for normality of error terms. Comment about the distribution of residuals.
 
+```{r qq3}
+ggplot(data = surg.datamrs, aes(sample = resid))+
+  geom_qq( color="coral")+
+  geom_qq_line( color="turquoise")+
+  labs(
+    title = paste("QQ Plot of Residuals for surg.data Linear Regression Model"),
+    subtitle = "by Jerry Yu"
+  ) +
+  xlab("Theoretical Quantiles")+
+  ylab("Sample Quantiles")
+```
+
+The data visually does not look normal, and demonstrates strong signs of heteroscedasticity.The residuals at the end seem to all deviate from the line. 
+
 ## j. Conduct a Shapiro-Wilk Test on the residuals. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value. Give the p-value for this test and explain what this means in terms of our model assumptions
+
+```{r shap3}
+surg.datasp <- shapiro.test(surg.datamrs$resid)
+surg.datasp
+```
+
+- H0: The random error is normally distributed
+- Ha: The random error is not normally distributed
+- Test Statistic: `r surg.datasp$statistic`
+- p value: `r surg.datasp$p.value`
+
+As p < 0.05, we fail to reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence that the random error is not normally distributed. This means that we cannot assume that the random error is normally distributed for our model, and thus a linear regression without transformation of the data is not advised. 
