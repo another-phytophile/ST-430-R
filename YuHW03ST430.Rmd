@@ -1,0 +1,121 @@
+---
+title: "Hw03ST430Yu"
+author: "Haozhe (Jerry) Yu"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(ggpmisc)
+library(dplyr)
+library(tinytex)
+library(usethis)
+library(lmtest)
+library(car)
+```
+
+# Question 1
+
+```{r import 1}
+educ <- as_tibble(read.table("https://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR28.txt", 
+            #sep = "", 
+            strip.white=TRUE,
+            col.name = c("Crime.Rate","High.School.Diploma")
+            ))
+educ
+```
+
+
+## a. Find the least squares regression equation to predict  the crime rate from the percent of individuals having at least a high school education. [Paste R or SAS output and then answer your question]
+
+```{r model}
+educm <- lm(Crime.Rate~High.School.Diploma,data=educ)
+
+str(educm)
+```
+
+The equation to predict crime rate (per 100,000 residents) from the percent of individuals in a country with at least a high school diploma is 
+
+Crime Rate = `r educm$coefficient[1]` + `r educm$coefficient[2]`High School Percent
+
+## b. Give the ANOVA Table for this regression analysis. [Paste R or SAS output]
+
+## c. Find SSE and MSE for this model.
+
+## d. What is the estimate of σ from this analysis?
+
+## e. What percent of the variation in crime rates can be explained by the percent of high school graduates?
+
+## f. What is the correlation between crime rates and percent of high school graduates?
+
+## g. Based on your ANOVA table, is the linear relationship between X and Y statistically significant? Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
+
+## h. Give a scatter plot of crime rates vs. percent of high school graduates, with the regression line. Comment about linearity 
+
+## i. Give the Residual Plot (residuals vs. fitted values). Test for Non-Linear and Non-constant variance.
+
+## j. Conduct Breusch-Pagan Test for the constancy of the error variance. Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
+
+## k. Index Plot to test for Independence of errors.
+
+## l. Conduct Durbin-Watson Test. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value.
+
+## m. Outlier deduction test [Plot standardized Residuals versus fitted values]
+
+## n. Give a Histogram of the residuals and the density curve. Comment about the distribution of residuals.
+
+
+## o. Give a QQ-plot of the residuals to test for normality of error terms. Comment about the distribution of residuals.
+
+## p. Conduct a Shapiro-Wilk Test on the residuals. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value. Give the p-value for this test and explain what this means in terms of our model assumptions.
+
+# Question 2
+
+## a. Give a scatter plot 
+
+## b. Find the least squares regression.
+
+## c. Give the Residual Plot (residuals vs. fitted values). Test for Non-Linear and Non-constant variance.
+
+## d. Conduct Breusch-Pagan Test for the constancy of the error variance.
+
+## e. Index Plot to test for Independence of errors.
+
+## f. Conduct Durbin-Watson Test.
+
+## g. outlier deduction test. [Plot standardized Residuals versus fitted values]
+
+## h. Give a Histogram of the residuals.
+
+## i. Give a QQ-plot of the residuals. Normality of error terms.
+
+## j. Conduct a Shapiro-Wilk Test on the residuals. Give the p-value for this test and explain what this means in terms of our model assumptions.
+
+## k. Give the ANOVA Table for this regression analysis. Based on your ANOVA table, is the linear relationship between X and Y statistically significant? Be sure to give an appropriate test statistic, its associated degrees of freedom, and the p-value.
+
+
+# Question 3
+
+## a. Based on your ANOVA table, is the linear relationship between X and Y statistically significant? Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
+
+## b. Give a scatter plot of clot vs. sur_time, with the 
+regression line. Comment about linearity 
+
+## c. Give the Residual Plot (residuals vs. fitted values). Test for Non-Linear and Non-constant variance.
+
+## d. Conduct Breusch-Pagan Test for the constancy of the error variance. Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
+
+## e. Index Plot to test for Independence of errors.
+
+## f. Conduct Durbin-Watson Test. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value.
+
+## g. Outlier deduction test [Plot standardized Residuals versus fitted values]
+
+## h. Give a Histogram of the residuals and the density curve. Comment about the distribution of residuals.
+
+## i. Give a QQ-plot of the residuals to test for normality of error terms. Comment about the distribution of residuals.
+
+## j. Conduct a Shapiro-Wilk Test on the residuals. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value. Give the p-value for this test and explain what this means in terms of our model assumptions
