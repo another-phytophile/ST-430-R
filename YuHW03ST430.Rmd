@@ -89,7 +89,7 @@ ggplot(educ,aes(x=High.School.Diploma,y=Crime.Rate))+
               show.legend=TRUE)+
     stat_poly_eq(eq.with.lhs = "italic(hat(y))~`=`~",
                use_label(c("eq", "R2")))+
-  labs(title = paste("Scatterplot of Crime Rate and Percent of High School Graduates \n with Linear Regression Line and Equation"),
+  labs(title = paste("Q1: Scatterplot of Crime Rate and Percent of High School Graduates \n with Linear Regression Line and Equation"),
          subtitle = "by Jerry Yu")+ 
   theme(plot.title = element_text(size = 12))
 ```
@@ -107,7 +107,7 @@ educmr <- tibble(
 ggplot(educmr,aes(x=fit,y=resid))+
   geom_jitter(color="salmon")+
   geom_hline(yintercept = 0, linetype="dotted")+
-  labs(title = paste("Residuals Versus Fitted Values for the Educ Data Set"),
+  labs(title = paste("Q1: Residuals Versus Fitted Values for the Educ Data Set"),
          subtitle = "by Jerry Yu")+ 
   theme(plot.title = element_text(size = 14))
 ```
@@ -136,7 +136,7 @@ ncvTest(educm)
 ggplot(educmr, aes(x = 1:length(resid), y = resid)) +
   geom_point(color = "aquamarine") +
   labs(x = "Index",
-       title = "Residual Time Sequence Plot for Educ Data",
+       title = "Q1 Residual Time Sequence Plot for Educ Data",
        subtitle = "by Jerry Yu") +
   geom_hline(yintercept = 0,
              color = "darkblue",
@@ -167,7 +167,7 @@ educmrs <- add_column(educmr, "rstandardized"=rstandard(educm))
 ggplot(educmrs, aes(x = fit, y = rstandardized)) +
   geom_point(color = "lightgreen") +
   labs(x = "Index",
-       title = "Outlier Detection Plot with Standarized Residuals vs Fit",
+       title = "Q1 Outlier Detection Plot with Standarized Residuals vs Fit",
        subtitle = "by Jerry Yu") +
   geom_hline(yintercept = 0,
              color = "darkblue",
@@ -187,7 +187,7 @@ We have 2 outliers, one where the fit = `r educmro[[1,1]]` and `r educmro[[2,1]]
 
 ## n. Give a Histogram of the residuals and the density curve. Comment about the distribution of residuals.
 
-```{r warning=FALSE}
+```{r density1, warning=FALSE}
 ggplot(data = educmrs, aes(x = resid, y = after_stat(density))) +
   geom_histogram(fill = "lightblue") +
   geom_density(color = "darkgreen") +
@@ -207,7 +207,7 @@ ggplot(data = educmrs, aes(sample = resid))+
   geom_qq( color="coral")+
   geom_qq_line( color="turquoise")+
   labs(
-    title = paste("QQ Plot of Residuals for Educ Linear Regression Model"),
+    title = paste("Q1: QQ Plot of Residuals for Educ Linear Regression Model"),
     subtitle = "by Jerry Yu"
   ) +
   xlab("Theoretical Quantiles")+
@@ -532,7 +532,7 @@ We have 4 outliers, shown in the table `surg.datamro`.
 
 ## h. Give a Histogram of the residuals and the density curve. Comment about the distribution of residuals.
 
-```{r resid3}
+```{r density3}
 ggplot(data = surg.datamrs, aes(x = resid, y = after_stat(density))) +
   geom_histogram(fill = "lightblue") +
   geom_density(color = "darkgreen") +
@@ -573,4 +573,4 @@ surg.datasp
 - Test Statistic: `r surg.datasp$statistic`
 - p value: `r surg.datasp$p.value`
 
-As p < 0.05, we fail to reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence that the random error is not normally distributed. This means that we cannot assume that the random error is normally distributed for our model, and thus a linear regression without transformation of the data is not advised. 
+As p < 0.05, we reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence that the random error is not normally distributed. This means that we cannot assume that the random error is normally distributed for our model, and thus a linear regression without transformation of the data is not advised. 
