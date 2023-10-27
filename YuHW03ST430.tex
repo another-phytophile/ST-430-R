@@ -1,0 +1,1243 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Hw03ST430Yu},
+  pdfauthor={Haozhe (Jerry) Yu},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Hw03ST430Yu}
+\author{Haozhe (Jerry) Yu}
+\date{2023-10-27}
+
+\begin{document}
+\maketitle
+
+\hypertarget{question-1}{%
+\section{Question 1}\label{question-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educ }\OtherTok{\textless{}{-}} \FunctionTok{as\_tibble}\NormalTok{(}\FunctionTok{read.table}\NormalTok{(}\StringTok{"https://users.stat.ufl.edu/\textasciitilde{}rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter\%20\%201\%20Data\%20Sets/CH01PR28.txt"}\NormalTok{, }
+            \CommentTok{\#sep = "", }
+            \AttributeTok{strip.white=}\ConstantTok{TRUE}\NormalTok{,}
+            \AttributeTok{col.name =} \FunctionTok{c}\NormalTok{(}\StringTok{"Crime.Rate"}\NormalTok{,}\StringTok{"High.School.Diploma"}\NormalTok{)}
+\NormalTok{            ))}
+\NormalTok{educ}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 84 x 2
+##    Crime.Rate High.School.Diploma
+##         <int>               <int>
+##  1       8487                  74
+##  2       8179                  82
+##  3       8362                  81
+##  4       8220                  81
+##  5       6246                  87
+##  6       9100                  66
+##  7       6561                  68
+##  8       5873                  81
+##  9       7993                  74
+## 10       7932                  82
+## # i 74 more rows
+\end{verbatim}
+
+\hypertarget{a.-find-the-least-squares-regression-equation-to-predict-the-crime-rate-from-the-percent-of-individuals-having-at-least-a-high-school-education.-paste-r-or-sas-output-and-then-answer-your-question}{%
+\subsection{a. Find the least squares regression equation to predict the
+crime rate from the percent of individuals having at least a high school
+education. {[}Paste R or SAS output and then answer your
+question{]}}\label{a.-find-the-least-squares-regression-equation-to-predict-the-crime-rate-from-the-percent-of-individuals-having-at-least-a-high-school-education.-paste-r-or-sas-output-and-then-answer-your-question}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educm }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Crime.Rate}\SpecialCharTok{\textasciitilde{}}\NormalTok{High.School.Diploma,}\AttributeTok{data=}\NormalTok{educ)}
+\end{Highlighting}
+\end{Shaded}
+
+The equation to predict crime rate (per 100,000 residents) from the
+percent of individuals in a country with at least a high school diploma
+is
+
+Crime Rate = \ensuremath{2.05176\times 10^{4}} + -170.5751886High School
+Percent
+
+\hypertarget{b.-give-the-anova-table-for-this-regression-analysis.-paste-r-or-sas-output}{%
+\subsection{b. Give the ANOVA Table for this regression analysis.
+{[}Paste R or SAS
+output{]}}\label{b.-give-the-anova-table-for-this-regression-analysis.-paste-r-or-sas-output}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educma }\OtherTok{\textless{}{-}} \FunctionTok{anova}\NormalTok{(educm)}
+
+\NormalTok{educma}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: Crime.Rate
+##                     Df    Sum Sq  Mean Sq F value    Pr(>F)    
+## High.School.Diploma  1  93462942 93462942  16.834 9.571e-05 ***
+## Residuals           82 455273165  5552112                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{c.-find-sse-and-mse-for-this-model.}{%
+\subsection{c.~Find SSE and MSE for this
+model.}\label{c.-find-sse-and-mse-for-this-model.}}
+
+The SSE for this model is \ensuremath{4.5527317\times 10^{8}} and the
+MSE is \ensuremath{5.5521118\times 10^{6}}.
+
+\hypertarget{d.-what-is-the-estimate-of-sigma-from-this-analysis}{%
+\subsection{d.~What is the estimate of sigma from this
+analysis?}\label{d.-what-is-the-estimate-of-sigma-from-this-analysis}}
+
+The estimate of \(\sigma\) for this analysis is 2356.2919539
+
+\hypertarget{e.-what-percent-of-the-variation-in-crime-rates-can-be-explained-by-the-percent-of-high-school-graduates}{%
+\subsection{e. What percent of the variation in crime rates can be
+explained by the percent of high school
+graduates?}\label{e.-what-percent-of-the-variation-in-crime-rates-can-be-explained-by-the-percent-of-high-school-graduates}}
+
+The percent of variation in crime rates explained by the percent of high
+school grads is 0.170324
+
+\hypertarget{f.-what-is-the-correlation-between-crime-rates-and-percent-of-high-school-graduates}{%
+\subsection{f.~What is the correlation between crime rates and percent
+of high school
+graduates?}\label{f.-what-is-the-correlation-between-crime-rates-and-percent-of-high-school-graduates}}
+
+The correlation between crime rates and percent of high school graduates
+is -0.4127033
+
+\hypertarget{g.-based-on-your-anova-table-is-the-linear-relationship-between-x-and-y-statistically-significant-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}{%
+\subsection{g. Based on your ANOVA table, is the linear relationship
+between X and Y statistically significant? Be sure to give an
+appropriate null and alternate hypothesis, test statistic, its
+associated degrees of freedom, and the
+p-value.}\label{g.-based-on-your-anova-table-is-the-linear-relationship-between-x-and-y-statistically-significant-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}}
+
+\begin{itemize}
+\item
+  H0: There is no linear relationship between crime rates and percent of
+  high school graduates (\(\beta_1\) =0)
+\item
+  HA: There is a linear relationship between crime rates and percent of
+  high school graduates (\(\beta_1\) ne 0)
+\item
+  Test Statistic (F value): 16.8337645
+\item
+  Degrees of Freedom: 1 for the model (High School Diploma Percent), and
+  82 for the error.
+\item
+  P value: \ensuremath{9.5713958\times 10^{-5}}
+\end{itemize}
+
+As p \textless{} 0.05, we reject H0 at \(\alpha\) = 0.05 and conclude
+that there is statistically significant evidence for a linear
+relationship between crime rate and percent of high school graduates.
+
+\hypertarget{h.-give-a-scatter-plot-of-crime-rates-vs.-percent-of-high-school-graduates-with-the-regression-line.-comment-about-linearity}{%
+\subsection{h. Give a scatter plot of crime rates vs.~percent of high
+school graduates, with the regression line. Comment about
+linearity}\label{h.-give-a-scatter-plot-of-crime-rates-vs.-percent-of-high-school-graduates-with-the-regression-line.-comment-about-linearity}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(educ,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{High.School.Diploma,}\AttributeTok{y=}\NormalTok{Crime.Rate))}\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{color=}\StringTok{"turquoise"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{, }\AttributeTok{formula=}\NormalTok{ y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x, }
+              \AttributeTok{se=}\ConstantTok{FALSE}\NormalTok{,}
+              \AttributeTok{show.legend=}\ConstantTok{TRUE}\NormalTok{)}\SpecialCharTok{+}
+    \FunctionTok{stat\_poly\_eq}\NormalTok{(}\AttributeTok{eq.with.lhs =} \StringTok{"italic(hat(y))\textasciitilde{}\textasciigrave{}=\textasciigrave{}\textasciitilde{}"}\NormalTok{,}
+               \FunctionTok{use\_label}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"eq"}\NormalTok{, }\StringTok{"R2"}\NormalTok{)))}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Q1: Scatterplot of Crime Rate and Percent of High School Graduates }\SpecialCharTok{\textbackslash{}n}\StringTok{ with Linear Regression Line and Equation"}\NormalTok{),}
+         \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{)}\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/scatter1-1.pdf} As there
+does not seem to be a nonlinear pattern in the scatterplot, and the
+regression line seems to slice across the residuals equally, leaving
+about 1/2 above and below. I would say that the data seems linear.
+
+\hypertarget{i.-give-the-residual-plot-residuals-vs.-fitted-values.-test-for-non-linear-and-non-constant-variance.}{%
+\subsection{i. Give the Residual Plot (residuals vs.~fitted values).
+Test for Non-Linear and Non-constant
+variance.}\label{i.-give-the-residual-plot-residuals-vs.-fitted-values.-test-for-non-linear-and-non-constant-variance.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educmr }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \StringTok{"fit"} \OtherTok{=}\NormalTok{ educm}\SpecialCharTok{$}\NormalTok{fitted.values,}
+  \StringTok{"resid"} \OtherTok{=}\NormalTok{ educm}\SpecialCharTok{$}\NormalTok{residuals}
+\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(educmr,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fit,}\AttributeTok{y=}\NormalTok{resid))}\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{color=}\StringTok{"salmon"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype=}\StringTok{"dotted"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Q1: Residuals Versus Fitted Values for the Educ Data Set"}\NormalTok{),}
+         \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{)}\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{14}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/fitplot1-1.pdf}
+
+As there do not seem to be patterns in the distribution of the
+residuals, nor any fan and funnel shapes, I conclude that the variance
+is likely linear and constant.
+
+\hypertarget{j.-conduct-breusch-pagan-test-for-the-constancy-of-the-error-variance.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}{%
+\subsection{j. Conduct Breusch-Pagan Test for the constancy of the error
+variance. Be sure to give an appropriate null and alternate hypothesis,
+test statistic, its associated degrees of freedom, and the
+p-value.}\label{j.-conduct-breusch-pagan-test-for-the-constancy-of-the-error-variance.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educmbp }\OtherTok{\textless{}{-}} \FunctionTok{bptest}\NormalTok{(educm,}\AttributeTok{studentize =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{educmbp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Breusch-Pagan test
+## 
+## data:  educm
+## BP = 0.005045, df = 1, p-value = 0.9434
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ncvTest}\NormalTok{(educm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 0.005045022, Df = 1, p = 0.94338
+\end{verbatim}
+
+\begin{itemize}
+\item
+  H0: Equal Variance Among Errors
+\item
+  HA: Unequal Variance Among Errors
+\item
+  Degree of Freedom: 1
+\item
+  P Value: 0.9433752
+\end{itemize}
+
+\hypertarget{k.-index-plot-to-test-for-independence-of-errors.}{%
+\subsection{k. Index Plot to test for Independence of
+errors.}\label{k.-index-plot-to-test-for-independence-of-errors.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(educmr, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(resid), }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"aquamarine"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Index"}\NormalTok{,}
+       \AttributeTok{title =} \StringTok{"Q1 Residual Time Sequence Plot for Educ Data"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"darkblue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dotdash"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\hypertarget{l.-conduct-durbin-watson-test.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.}{%
+\subsection{l. Conduct Durbin-Watson Test. Be sure to give an
+appropriate null and alternate hypothesis, test statistic and the
+p-value.}\label{l.-conduct-durbin-watson-test.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dwtest}\NormalTok{(educm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  educm
+## DW = 1.4951, p-value = 0.008696
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educmw }\OtherTok{\textless{}{-}}\FunctionTok{durbinWatsonTest}\NormalTok{(educm)}
+\NormalTok{educmw}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  lag Autocorrelation D-W Statistic p-value
+##    1         0.25204      1.495148   0.022
+##  Alternative hypothesis: rho != 0
+\end{verbatim}
+
+\begin{itemize}
+\item
+  H0: Errors are uncorrelated over time
+\item
+  HA: Errors are correlated (either positive or negative). I used the
+  \texttt{car} test where the alternative hypothesis is 2 sided
+\item
+  Test Statistic: 1.4951485
+\item
+  p value: 0.022
+\end{itemize}
+
+\hypertarget{m.-outlier-deduction-test-plot-standardized-residuals-versus-fitted-values}{%
+\subsection{m. Outlier deduction test {[}Plot standardized Residuals
+versus fitted
+values{]}}\label{m.-outlier-deduction-test-plot-standardized-residuals-versus-fitted-values}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educmrs }\OtherTok{\textless{}{-}} \FunctionTok{add\_column}\NormalTok{(educmr, }\StringTok{"rstandardized"}\OtherTok{=}\FunctionTok{rstandard}\NormalTok{(educm))}
+
+\FunctionTok{ggplot}\NormalTok{(educmrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ fit, }\AttributeTok{y =}\NormalTok{ rstandardized)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"lightgreen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Index"}\NormalTok{,}
+       \AttributeTok{title =} \StringTok{"Q1 Outlier Detection Plot with Standarized Residuals vs Fit"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"darkblue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"solid"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \SpecialCharTok{{-}}\DecValTok{2}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"blue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{2}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"blue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/outlier1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{educmro }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(educmrs,}\FunctionTok{abs}\NormalTok{(rstandardized) }\SpecialCharTok{\textgreater{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{educmro}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 3
+##     fit  resid rstandardized
+##   <dbl>  <dbl>         <dbl>
+## 1 7213.  6803.          2.90
+## 2 7383. -5278.         -2.25
+\end{verbatim}
+
+We have 2 outliers, one where the fit = 7212.7352313 and 7383.31042
+
+\hypertarget{n.-give-a-histogram-of-the-residuals-and-the-density-curve.-comment-about-the-distribution-of-residuals.}{%
+\subsection{n.~Give a Histogram of the residuals and the density curve.
+Comment about the distribution of
+residuals.}\label{n.-give-a-histogram-of-the-residuals-and-the-density-curve.-comment-about-the-distribution-of-residuals.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ educmrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ resid, }\AttributeTok{y =} \FunctionTok{after\_stat}\NormalTok{(density))) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgreen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Histogram and Density Plot of Residuals for Data Set Educ"}\NormalTok{),}
+    \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Density of Residuals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\includegraphics{YuHW03ST430_files/figure-latex/density1-1.pdf}
+
+There seems to be a slight right skew in the data, The 2 outliers
+detected in part m are clearly visible.
+
+\hypertarget{o.-give-a-qq-plot-of-the-residuals-to-test-for-normality-of-error-terms.-comment-about-the-distribution-of-residuals.}{%
+\subsection{o. Give a QQ-plot of the residuals to test for normality of
+error terms. Comment about the distribution of
+residuals.}\label{o.-give-a-qq-plot-of-the-residuals-to-test-for-normality-of-error-terms.-comment-about-the-distribution-of-residuals.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ educmrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ resid))}\SpecialCharTok{+}
+  \FunctionTok{geom\_qq}\NormalTok{( }\AttributeTok{color=}\StringTok{"coral"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_qq\_line}\NormalTok{( }\AttributeTok{color=}\StringTok{"turquoise"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Q1: QQ Plot of Residuals for Educ Linear Regression Model"}\NormalTok{),}
+    \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Theoretical Quantiles"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Sample Quantiles"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/qq1-1.pdf}
+
+The data visually does not look normal, as the extreme Residuals both
+look flatter than the Theoretical Residuals (the line).
+
+\hypertarget{p.-conduct-a-shapiro-wilk-test-on-the-residuals.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.-give-the-p-value-for-this-test-and-explain-what-this-means-in-terms-of-our-model-assumptions.}{%
+\subsection{p.~Conduct a Shapiro-Wilk Test on the residuals. Be sure to
+give an appropriate null and alternate hypothesis, test statistic and
+the p-value. Give the p-value for this test and explain what this means
+in terms of our model
+assumptions.}\label{p.-conduct-a-shapiro-wilk-test-on-the-residuals.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.-give-the-p-value-for-this-test-and-explain-what-this-means-in-terms-of-our-model-assumptions.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{shap1 }\OtherTok{\textless{}{-}} \FunctionTok{shapiro.test}\NormalTok{(educmrs}\SpecialCharTok{$}\NormalTok{resid)}
+\NormalTok{shap1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  educmrs$resid
+## W = 0.97763, p-value = 0.1515
+\end{verbatim}
+
+\begin{itemize}
+\item
+  H0: The random error is normally distributed
+\item
+  Ha: The random error is not normally distributed
+\item
+  Test Statistic: 0.9776328
+\item
+  p value: 0.1514916
+\end{itemize}
+
+As p \textgreater{} 0.05, we fail to reject H0 at \(\alpha\) = 0.05 and
+conclude that there is no statistically significant evidence that the
+random error is not normally distributed.
+
+\hypertarget{question-2}{%
+\section{Question 2}\label{question-2}}
+
+\begin{quote}
+2.Download the ``Explosives dataset'' from Moodle. Fit a simple linear
+regression, relating the deflection of galvonometer (Y) to the area of
+the wires on the coupling (X). Complete the following parts.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplode }\OtherTok{\textless{}{-}} \FunctionTok{as\_tibble}\NormalTok{(}\FunctionTok{read.table}\NormalTok{(}\StringTok{"Datasets/explosives.txt"}\NormalTok{, }
+            \AttributeTok{strip.white=}\ConstantTok{TRUE}\NormalTok{,}
+            \AttributeTok{col.name =} \FunctionTok{c}\NormalTok{(}\StringTok{"Coupling.Number"}\NormalTok{,}\StringTok{"Wire.Area"}\NormalTok{,}\StringTok{"Galvonometer"}\NormalTok{)}
+\NormalTok{            ))}
+\NormalTok{xplode}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22 x 3
+##    Coupling.Number Wire.Area Galvonometer
+##              <int>     <int>        <dbl>
+##  1               1       152         85  
+##  2               1       152         81.5
+##  3               1       152         83.5
+##  4               2       125        102  
+##  5               2       125         90.5
+##  6               2       125         98.5
+##  7               3        99        109  
+##  8               3        99        116. 
+##  9               4        66        131  
+## 10               4        66        128. 
+## # i 12 more rows
+\end{verbatim}
+
+\hypertarget{a.-give-a-scatter-plot}{%
+\subsection{a. Give a scatter plot}\label{a.-give-a-scatter-plot}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(xplode,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Wire.Area,}\AttributeTok{y=}\NormalTok{Galvonometer))}\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{color=}\StringTok{"salmon"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Scatterplot of Wire Area and Galvonometer Deflection"}\NormalTok{),}
+         \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/scatter2-1.pdf}
+
+\hypertarget{b.-find-the-least-squares-regression.}{%
+\subsection{b. Find the least squares
+regression.}\label{b.-find-the-least-squares-regression.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodem }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Galvonometer}\SpecialCharTok{\textasciitilde{}}\NormalTok{Wire.Area,xplode)}
+\NormalTok{xplodem}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Galvonometer ~ Wire.Area, data = xplode)
+## 
+## Coefficients:
+## (Intercept)    Wire.Area  
+##    184.4357      -0.6954
+\end{verbatim}
+
+\hypertarget{c.-give-the-residual-plot-residuals-vs.-fitted-values.-test-for-non-linear-and-non-constant-variance.}{%
+\subsection{c.~Give the Residual Plot (residuals vs.~fitted values).
+Test for Non-Linear and Non-constant
+variance.}\label{c.-give-the-residual-plot-residuals-vs.-fitted-values.-test-for-non-linear-and-non-constant-variance.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodemr }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \StringTok{"fit"} \OtherTok{=}\NormalTok{ xplodem}\SpecialCharTok{$}\NormalTok{fitted.values,}
+  \StringTok{"resid"} \OtherTok{=}\NormalTok{ xplodem}\SpecialCharTok{$}\NormalTok{residuals}
+\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(xplodemr,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fit,}\AttributeTok{y=}\NormalTok{resid))}\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{color=}\StringTok{"yellowgreen"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype=}\StringTok{"dotted"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Residuals Versus Fitted Values for the Xplode Data Set"}\NormalTok{),}
+         \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{)}\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/fitplot2-1.pdf}
+
+There does seem to be a pattern the the distribution of residuals and
+fitted values, with mostly positive residuals between 75 and 100 and
+160-175, and mostly negative between 100 and 160. This might indicate
+that the variance is not linear. However, the pattern of the variances
+does not assume the shape of a funnel, so there is no evidence that the
+variance is non constant. However, as there are relatively few data
+points, we cannot conclude anything from the residual plot, and will
+rely on the Breusch-Pagan Test in part d.~
+
+\hypertarget{d.-conduct-breusch-pagan-test-for-the-constancy-of-the-error-variance.}{%
+\subsection{d.~Conduct Breusch-Pagan Test for the constancy of the error
+variance.}\label{d.-conduct-breusch-pagan-test-for-the-constancy-of-the-error-variance.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodembp }\OtherTok{\textless{}{-}} \FunctionTok{bptest}\NormalTok{(xplodem,}\AttributeTok{studentize =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{xplodembp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Breusch-Pagan test
+## 
+## data:  xplodem
+## BP = 3.6375, df = 1, p-value = 0.05649
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ncvTest}\NormalTok{(xplodem)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 3.637537, Df = 1, p = 0.05649
+\end{verbatim}
+
+\hypertarget{e.-index-plot-to-test-for-independence-of-errors.}{%
+\subsection{e. Index Plot to test for Independence of
+errors.}\label{e.-index-plot-to-test-for-independence-of-errors.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(xplodemr, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(resid), }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"aquamarine"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Index"}\NormalTok{,}
+       \AttributeTok{title =} \StringTok{"Residual Time Sequence Plot for xplode Data"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"darkblue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dotdash"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/index2-1.pdf}
+
+\hypertarget{f.-conduct-durbin-watson-test.}{%
+\subsection{f.~Conduct Durbin-Watson
+Test.}\label{f.-conduct-durbin-watson-test.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dwtest}\NormalTok{(xplodem)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  xplodem
+## DW = 0.89573, p-value = 0.0008088
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodemw }\OtherTok{\textless{}{-}}\FunctionTok{durbinWatsonTest}\NormalTok{(xplodem)}
+\NormalTok{xplodemw}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  lag Autocorrelation D-W Statistic p-value
+##    1       0.3594126     0.8957278   0.008
+##  Alternative hypothesis: rho != 0
+\end{verbatim}
+
+\hypertarget{g.-outlier-deduction-test.-plot-standardized-residuals-versus-fitted-values}{%
+\subsection{g. outlier deduction test. {[}Plot standardized Residuals
+versus fitted
+values{]}}\label{g.-outlier-deduction-test.-plot-standardized-residuals-versus-fitted-values}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodemrs }\OtherTok{\textless{}{-}} \FunctionTok{add\_column}\NormalTok{(xplodemr, }\StringTok{"rstandardized"}\OtherTok{=}\FunctionTok{rstandard}\NormalTok{(xplodem))}
+
+\FunctionTok{ggplot}\NormalTok{(xplodemrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ fit, }\AttributeTok{y =}\NormalTok{ rstandardized)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"lightgreen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Index"}\NormalTok{,}
+       \AttributeTok{title =} \StringTok{"Outlier Detection Plot with Standarized Residuals vs Fit for Xplode Data"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"darkblue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"solid"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \SpecialCharTok{{-}}\DecValTok{2}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"blue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{2}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"blue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodemro }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(xplodemrs,}\FunctionTok{abs}\NormalTok{(rstandardized) }\SpecialCharTok{\textgreater{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{xplodemro}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##     fit resid rstandardized
+##   <dbl> <dbl>         <dbl>
+## 1  173.  19.4          2.80
+\end{verbatim}
+
+We have 1 outlier where the fit = \texttt{r\ xplodemro{[}{[}1,1{]}{]}}.
+
+\hypertarget{i.-give-a-qq-plot-of-the-residuals.-normality-of-error-terms.}{%
+\subsection{i. Give a QQ-plot of the residuals. Normality of error
+terms.}\label{i.-give-a-qq-plot-of-the-residuals.-normality-of-error-terms.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ xplodemrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ resid))}\SpecialCharTok{+}
+  \FunctionTok{geom\_qq}\NormalTok{( }\AttributeTok{color=}\StringTok{"coral"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_qq\_line}\NormalTok{( }\AttributeTok{color=}\StringTok{"turquoise"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"QQ Plot of Residuals for Xplode Linear Regression Model"}\NormalTok{),}
+    \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Theoretical Quantiles"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Sample Quantiles"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/qq2-1.pdf}
+
+\hypertarget{j.-conduct-a-shapiro-wilk-test-on-the-residuals.-give-the-p-value-for-this-test-and-explain-what-this-means-in-terms-of-our-model-assumptions.}{%
+\subsection{j. Conduct a Shapiro-Wilk Test on the residuals. Give the
+p-value for this test and explain what this means in terms of our model
+assumptions.}\label{j.-conduct-a-shapiro-wilk-test-on-the-residuals.-give-the-p-value-for-this-test-and-explain-what-this-means-in-terms-of-our-model-assumptions.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodeshap }\OtherTok{\textless{}{-}} \FunctionTok{shapiro.test}\NormalTok{(xplodemrs}\SpecialCharTok{$}\NormalTok{resid)}
+\NormalTok{xplodeshap}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  xplodemrs$resid
+## W = 0.92354, p-value = 0.09004
+\end{verbatim}
+
+\begin{itemize}
+\item
+  H0: The random error is normally distributed
+\item
+  Ha: The random error is not normally distributed
+\item
+  p value: 0.0900395.
+\end{itemize}
+
+As p \textgreater{} 0.05, we fail to reject H0 at \(\alpha\) = 0.05 and
+conclude that there is no statistically significant evidence that the
+random error is not normally distributed.
+
+\hypertarget{k.-give-the-anova-table-for-this-regression-analysis.-based-on-your-anova-table-is-the-linear-relationship-between-x-and-y-statistically-significant-be-sure-to-give-an-appropriate-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}{%
+\subsection{k. Give the ANOVA Table for this regression analysis. Based
+on your ANOVA table, is the linear relationship between X and Y
+statistically significant? Be sure to give an appropriate test
+statistic, its associated degrees of freedom, and the
+p-value.}\label{k.-give-the-anova-table-for-this-regression-analysis.-based-on-your-anova-table-is-the-linear-relationship-between-x-and-y-statistically-significant-be-sure-to-give-an-appropriate-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xplodema }\OtherTok{\textless{}{-}} \FunctionTok{anova}\NormalTok{(xplodem)}
+
+\NormalTok{xplodema}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: Galvonometer
+##           Df  Sum Sq Mean Sq F value    Pr(>F)    
+## Wire.Area  1 22749.5 22749.5   422.6 6.386e-15 ***
+## Residuals 20  1076.6    53.8                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{itemize}
+\item
+  H0: There is no linear relationship between Wire Area (1/100,000 in)
+  and Deflection of Galvonometer in mm (\(\beta_1\) =0)
+\item
+  H0: There is a linear relationship between Wire Area (1/100,000 in)
+  and Deflection of Galvonometer in mm (\(\beta_1\) ne 0)
+\item
+  Test Statistic (F value): 422.6036859
+\item
+  Degrees of Freedom: 1 for the model (Area of Wires (1/100,000 in)),
+  and 20 for the error.
+\item
+  P value: \ensuremath{6.386449\times 10^{-15}}
+\end{itemize}
+
+As p \textless{} 0.05, we reject H0 at \(\alpha\) = 0.05 and conclude
+that there is statistically significant evidence for a linear
+relationship between Wire Area (1/100,000 in) and Deflection of
+Galvonometer in mm.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.data }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}
+  \StringTok{"Datasets/Surgical Unit.txt"}\NormalTok{,}
+  \AttributeTok{header =} \ConstantTok{FALSE}\NormalTok{,}
+  \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"clot"}\NormalTok{,}
+    \StringTok{"PI"}\NormalTok{,}
+    \StringTok{"enzy"}\NormalTok{,}
+    \StringTok{"liver"}\NormalTok{,}
+    \StringTok{"age"}\NormalTok{,}
+    \StringTok{"gender"}\NormalTok{,}
+    \StringTok{"mod\_use"}\NormalTok{,}
+    \StringTok{"heavy\_use"}\NormalTok{,}
+    \StringTok{"sur\_time"}\NormalTok{,}
+    \StringTok{"ln\_sur\_time"}
+\NormalTok{  )}
+\NormalTok{)}
+
+\FunctionTok{attach}\NormalTok{(surg.data)}
+\NormalTok{gender }\OtherTok{=} \FunctionTok{factor}\NormalTok{(gender)}
+
+\NormalTok{surg.datam }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(sur\_time}\SpecialCharTok{\textasciitilde{}}\NormalTok{clot,}\AttributeTok{data=}\NormalTok{surg.data)}
+
+\NormalTok{surg.datam}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = sur_time ~ clot, data = surg.data)
+## 
+## Coefficients:
+## (Intercept)         clot  
+##      205.26        85.91
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.dataa }\OtherTok{\textless{}{-}} \FunctionTok{anova}\NormalTok{(surg.datam)}
+
+\NormalTok{surg.dataa}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: sur_time
+##           Df  Sum Sq Mean Sq F value  Pr(>F)  
+## clot       1 1005152 1005152  7.0974 0.01025 *
+## Residuals 52 7364369  141622                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{question-3}{%
+\section{Question 3}\label{question-3}}
+
+\hypertarget{a.-based-on-your-anova-table-is-the-linear-relationship-between-x-and-y-statistically-significant-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}{%
+\subsection{a. Based on your ANOVA table, is the linear relationship
+between X and Y statistically significant? Be sure to give an
+appropriate null and alternate hypothesis, test statistic, its
+associated degrees of freedom, and the
+p-value.}\label{a.-based-on-your-anova-table-is-the-linear-relationship-between-x-and-y-statistically-significant-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}}
+
+\begin{itemize}
+\item
+  H0: There is no linear relationship between survival time and blood
+  clotting score (\(\beta_1\) =0)
+\item
+  HA: There is a linear relationship between survival time and blood
+  clotting score (\(\beta_1\) ne 0)
+\item
+  Test Statistic (F value): 7.097402
+\item
+  Degrees of Freedom: 1 for the model (Blood-clotting score), and 52 for
+  the error.
+\item
+  P value: 0.0102549
+\end{itemize}
+
+As p \textless{} 0.05, we reject H0 at \(\alpha\) = 0.05 and conclude
+that there is statistically significant evidence for a linear
+relationship between blood clotting score and survival time.
+
+\hypertarget{b.-give-a-scatter-plot-of-clot-vs.-sur_time-with-the}{%
+\subsection{b. Give a scatter plot of clot vs.~sur\_time, with
+the}\label{b.-give-a-scatter-plot-of-clot-vs.-sur_time-with-the}}
+
+regression line. Comment about linearity
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(surg.data,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{clot,}\AttributeTok{y=}\NormalTok{sur\_time))}\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{color=}\StringTok{"turquoise"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{, }\AttributeTok{formula=}\NormalTok{ y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x,}
+              \AttributeTok{se=}\ConstantTok{FALSE}\NormalTok{,}
+              \AttributeTok{show.legend=}\ConstantTok{TRUE}\NormalTok{)}\SpecialCharTok{+}
+    \FunctionTok{stat\_poly\_eq}\NormalTok{(}\AttributeTok{eq.with.lhs =} \StringTok{"italic(hat(y))\textasciitilde{}\textasciigrave{}=\textasciigrave{}\textasciitilde{}"}\NormalTok{,}
+               \FunctionTok{use\_label}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"eq"}\NormalTok{, }\StringTok{"R2"}\NormalTok{)))}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Scatterplot of Clotting Score and Survival Time }\SpecialCharTok{\textbackslash{}n}\StringTok{ with Linear Regression Line and Equation"}\NormalTok{),}
+         \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/scatter3-1.pdf}
+
+I would say that the distributions of residuals above and below the
+regression line look somewhat even. However there is a noticeable funnel
+pattern, but that is indicative of heteroscedasticity, not
+non-linearity.
+
+\hypertarget{c.-give-the-residual-plot-residuals-vs.-fitted-values.-test-for-non-linear-and-non-constant-variance.-1}{%
+\subsection{c.~Give the Residual Plot (residuals vs.~fitted values).
+Test for Non-Linear and Non-constant
+variance.}\label{c.-give-the-residual-plot-residuals-vs.-fitted-values.-test-for-non-linear-and-non-constant-variance.-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.datamr }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \StringTok{"fit"} \OtherTok{=}\NormalTok{ surg.datam}\SpecialCharTok{$}\NormalTok{fitted.values,}
+  \StringTok{"resid"} \OtherTok{=}\NormalTok{ surg.datam}\SpecialCharTok{$}\NormalTok{residuals}
+\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(surg.datamr,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fit,}\AttributeTok{y=}\NormalTok{resid))}\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{color=}\StringTok{"salmon"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype=}\StringTok{"dotted"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Residuals Versus Fitted Values for the surg.data Data Set"}\NormalTok{),}
+         \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{14}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/resid3-1.pdf}
+
+\hypertarget{d.-conduct-breusch-pagan-test-for-the-constancy-of-the-error-variance.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}{%
+\subsection{d.~Conduct Breusch-Pagan Test for the constancy of the error
+variance. Be sure to give an appropriate null and alternate hypothesis,
+test statistic, its associated degrees of freedom, and the
+p-value.}\label{d.-conduct-breusch-pagan-test-for-the-constancy-of-the-error-variance.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-its-associated-degrees-of-freedom-and-the-p-value.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.datambp }\OtherTok{\textless{}{-}} \FunctionTok{bptest}\NormalTok{(surg.datam,}\AttributeTok{studentize =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{ncvTest}\NormalTok{(surg.datam)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 14.44279, Df = 1, p = 0.00014448
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  H0: Equal Variance Among Errors
+\item
+  HA: Unequal Variance Among Errors
+\item
+  Degree of Freedom: 1
+\item
+  P Value: \ensuremath{1.4448211\times 10^{-4}}
+\end{itemize}
+
+\hypertarget{e.-index-plot-to-test-for-independence-of-errors.-1}{%
+\subsection{e. Index Plot to test for Independence of
+errors.}\label{e.-index-plot-to-test-for-independence-of-errors.-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(surg.datamr, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(resid), }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"aquamarine"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Index"}\NormalTok{,}
+       \AttributeTok{title =} \StringTok{"Residual Time Sequence Plot for Surgical Data"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"darkblue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dotdash"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/index3-1.pdf}
+
+\hypertarget{f.-conduct-durbin-watson-test.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.}{%
+\subsection{f.~Conduct Durbin-Watson Test. Be sure to give an
+appropriate null and alternate hypothesis, test statistic and the
+p-value.}\label{f.-conduct-durbin-watson-test.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dwtest}\NormalTok{(surg.datam)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  surg.datam
+## DW = 2.3034, p-value = 0.8724
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.datamw }\OtherTok{\textless{}{-}}\FunctionTok{durbinWatsonTest}\NormalTok{(surg.datam)}
+\NormalTok{surg.datamw}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  lag Autocorrelation D-W Statistic p-value
+##    1      -0.1587264      2.303382   0.228
+##  Alternative hypothesis: rho != 0
+\end{verbatim}
+
+\begin{itemize}
+\item
+  H0: Errors are uncorrelated over time
+\item
+  HA: Errors are correlated (either positive or negative). I used the
+  \texttt{car} test where the alternative hypothesis is 2 sided
+\item
+  Test Statistic: 2.3033819
+\item
+  p value: 0.228
+\end{itemize}
+
+\hypertarget{g.-outlier-deduction-test-plot-standardized-residuals-versus-fitted-values}{%
+\subsection{g. Outlier deduction test {[}Plot standardized Residuals
+versus fitted
+values{]}}\label{g.-outlier-deduction-test-plot-standardized-residuals-versus-fitted-values}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.datamrs }\OtherTok{\textless{}{-}} \FunctionTok{add\_column}\NormalTok{(surg.datamr, }\StringTok{"rstandardized"}\OtherTok{=}\FunctionTok{rstandard}\NormalTok{(surg.datam))}
+
+\FunctionTok{ggplot}\NormalTok{(surg.datamrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ fit, }\AttributeTok{y =}\NormalTok{ rstandardized)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"lightgreen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Index"}\NormalTok{,}
+       \AttributeTok{title =} \StringTok{"Outlier Detection Plot with Standarized Residuals vs Fit"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"darkblue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"solid"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \SpecialCharTok{{-}}\DecValTok{2}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"blue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{2}\NormalTok{,}
+             \AttributeTok{color =} \StringTok{"blue"}\NormalTok{,}
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/out3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.datamro }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(surg.datamrs,}\FunctionTok{abs}\NormalTok{(rstandardized) }\SpecialCharTok{\textgreater{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{surg.datamro}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 3
+##     fit resid rstandardized
+##   <dbl> <dbl>         <dbl>
+## 1  875. 1468.          4.00
+## 2  704.  869.          2.33
+## 3 1167.  798.          2.42
+## 4  953. -772.         -2.14
+\end{verbatim}
+
+We have 4 outliers, shown in the table \texttt{surg.datamro}.
+
+\hypertarget{h.-give-a-histogram-of-the-residuals-and-the-density-curve.-comment-about-the-distribution-of-residuals.}{%
+\subsection{h. Give a Histogram of the residuals and the density curve.
+Comment about the distribution of
+residuals.}\label{h.-give-a-histogram-of-the-residuals-and-the-density-curve.-comment-about-the-distribution-of-residuals.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ surg.datamrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ resid, }\AttributeTok{y =} \FunctionTok{after\_stat}\NormalTok{(density))) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgreen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Histogram and Density Plot of Residuals for Data Set surg.data"}\NormalTok{),}
+    \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Density of Residuals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\includegraphics{YuHW03ST430_files/figure-latex/density3-1.pdf}
+
+There seems to be a slight right skew in the data, 3 of the 4 outliers
+detected in part g are clearly visible.
+
+\hypertarget{i.-give-a-qq-plot-of-the-residuals-to-test-for-normality-of-error-terms.-comment-about-the-distribution-of-residuals.}{%
+\subsection{i. Give a QQ-plot of the residuals to test for normality of
+error terms. Comment about the distribution of
+residuals.}\label{i.-give-a-qq-plot-of-the-residuals-to-test-for-normality-of-error-terms.-comment-about-the-distribution-of-residuals.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ surg.datamrs, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ resid))}\SpecialCharTok{+}
+  \FunctionTok{geom\_qq}\NormalTok{( }\AttributeTok{color=}\StringTok{"coral"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_qq\_line}\NormalTok{( }\AttributeTok{color=}\StringTok{"turquoise"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"QQ Plot of Residuals for surg.data Linear Regression Model"}\NormalTok{),}
+    \AttributeTok{subtitle =} \StringTok{"by Jerry Yu"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Theoretical Quantiles"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Sample Quantiles"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{YuHW03ST430_files/figure-latex/qq3-1.pdf}
+
+The data visually does not look normal, and demonstrates strong signs of
+heteroscedasticity.The residuals at the end seem to all deviate from the
+line.
+
+\hypertarget{j.-conduct-a-shapiro-wilk-test-on-the-residuals.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.-give-the-p-value-for-this-test-and-explain-what-this-means-in-terms-of-our-model-assumptions}{%
+\subsection{j. Conduct a Shapiro-Wilk Test on the residuals. Be sure to
+give an appropriate null and alternate hypothesis, test statistic and
+the p-value. Give the p-value for this test and explain what this means
+in terms of our model
+assumptions}\label{j.-conduct-a-shapiro-wilk-test-on-the-residuals.-be-sure-to-give-an-appropriate-null-and-alternate-hypothesis-test-statistic-and-the-p-value.-give-the-p-value-for-this-test-and-explain-what-this-means-in-terms-of-our-model-assumptions}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surg.datasp }\OtherTok{\textless{}{-}} \FunctionTok{shapiro.test}\NormalTok{(surg.datamrs}\SpecialCharTok{$}\NormalTok{resid)}
+\NormalTok{surg.datasp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  surg.datamrs$resid
+## W = 0.87793, p-value = 5.348e-05
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  H0: The random error is normally distributed
+\item
+  Ha: The random error is not normally distributed
+\item
+  Test Statistic: 0.8779272
+\item
+  p value: \ensuremath{5.3476597\times 10^{-5}}
+\end{itemize}
+
+As p \textless{} 0.05, we reject H0 at \(\alpha\) = 0.05 and conclude
+that there is statistically significant evidence that the random error
+is not normally distributed. This means that we cannot assume that the
+random error is normally distributed for our model, and thus a linear
+regression without transformation of the data is not advised.
+
+H0: \(\frac{\beta_{software2*Sales Last Quarter}}{2}\) +
+\(\frac{\beta_{software2}{2}\) =
+\(\beta_{software2*Sales Last Quarter}\) + \(\beta_{software2}\)
+
+\end{document}
