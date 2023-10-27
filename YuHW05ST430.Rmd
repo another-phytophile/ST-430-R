@@ -16,6 +16,30 @@ library(tinytex)
 library(usethis)
 library(lmtest)
 library(car)
+library(rsq)
+ftest = function(model, L, h = 0)
+  # General linear test of H0: L beta = h
+{
+  BetaHat = model$coefficients
+  dimL = dim(L)
+  if (length(BetaHat) != dimL[2])
+    stop("Sizes of L and Beta are incompatible")
+  r = dimL[1]
+  if (qr(L)$rank != r)
+    stop("Rows of L must be linearly independent.")
+  out = numeric(4)
+  names(out) = c("F", "df1", "df2", "p-value")
+  dfe = df.residual(model)
+  diff = L %*% BetaHat - h
+  fstat = t(diff) %*% solve(L %*% vcov(model) %*% t(L)) %*% diff / r
+  # Note vcov = MSE * XtXinv
+  fstat = as.numeric(fstat)
+  out[1] = fstat
+  out[2] = r
+  out[3] = dfe
+  out[4] = 1 - pf(fstat, r, dfe)
+  return(out)
+} # End of function ftest
 ```
 
 # Question 1
@@ -29,30 +53,11 @@ software <- as_tibble(read_table("Datasets/software.txt",
 ## 1A. Fit a model in which sales last quarter is ignored. We want to know whether software package has any effect on sales.
 
 ```{r SLR}
-softwareslr <- lm(SalesThisQuarter~as.factor(Software),software)
-
-summary(softwareslr)
-
-anova(softwareslr)
-
-str(summary(softwareslr))
-
-summary(softwareslr)$coefficients
-
-summary(softwareslr)[[8]][1]
-
-2*(1-pt(-0.431,34))
-pt(-0.431,34)
-0.669
-1-pt(-0.431,34)
+softwareslr <- lm(SalesThisQuarter ~ as.factor(Software), software)
 ```
-> i. Write E(y/x).
+> i. Write E(y|x).
 
-- E(SalesThisQuarter/Software = 1) = `r summary(softwareslr)$coefficients[1,1]`.
-
-- E(SalesThisQuarter/Software = 2) = `r summary(softwareslr)$coefficients[1,1] + summary(softwareslr)$coefficients[2,1]`.
-
-- E(SalesThisQuarter/Software = 3) = `r summary(softwareslr)$coefficients[1,1] + summary(softwareslr)$coefficients[3,1]`.
+E(y|x) = `r summary(softwareslr)$coefficients[1,1]` + `r summary(softwareslr)$coefficients[2,1]`software2 + `r summary(softwareslr)$coefficients[3,1]`software3. 
 
 > ii. What proportion of the variation in sales this quarter is explained by software package? 
 
@@ -60,18 +65,169 @@ The proportion of the variation in sales this quarter that can be explained w th
 
  > iii. What is the null hypothesis for testing whether software package has any effect on sales? 
  
- H0: The type of software package has no effect on sales this quarter. 
+ H0: The type of software package has no effect on sales this quarter. That is $\beta_{software2}$ = $\beta_{software3}$ = 0.
+
+> iv. Give the test statistic. 
+
+The test statistic is `r summary(softwareslr)[[10]][1]`.
 
 > v. Give the p-value. 
 
+The p value is `r pf(summary(softwareslr)$fstatistic[1],summary(softwareslr)$fstatistic[2],summary(softwareslr)$fstatistic[3],lower.tail=F)`.
+
 > vi. Do you reject H0 at α = 0.05? 
+
+No, `r pf(summary(softwareslr)$fstatistic[1],summary(softwareslr)$fstatistic[2],summary(softwareslr)$fstatistic[3],lower.tail=F)` > 0.05.
 
 > vii. Are the results statistically significant at the 0.05 level? 
 
+No, the results are not significant at the 0.05 level because out p value is higher than 0.05. We fail to reject the null hypothesis and conclude there is not enough evidence to support the claim that the type of software package has an effect on the sales for this quarter, if we ignore the sales form last quarter. 
+
+## 1B. Fit a model with software package and sales last quarter as the explanatory variables, and sales this quarter as the response variable.
+
+```{r MLR}
+softwaremlr <-
+  lm(SalesThisQuarter ~ as.factor(Software) + SalesLastQuarter,
+     software)
+```
+
+
+> i. Write E(y|x). 
+
+E(y|x) = `r summary(softwaremlr)$coefficients[1,1]` + `r summary(softwaremlr)$coefficients[2,1]`software2 + `r summary(softwaremlr)$coefficients[3,1]`software3 + `r summary(softwaremlr)$coefficients[4,1]`Sales Last Quarter. 
+
+> ii. What is the null hypothesis for testing whether software package has any effect on sales this quarter once you control for sales last quarter? 
+
+H0 = $\beta_{software2}$ = $\beta_{software3}$ = 0.
+
+> iii. Give the test statistic. 
+
+```{r fgen}
+softf <-
+  ftest(softwaremlr, matrix(c(0, 1, 0, 0, 0, 0, 1, 0), nrow = 2, byrow =
+                              TRUE))
+```
+
+the F statistic for the general linear test is `r softf[1]`.
+
+
+> iv. Give the p-value. 
+
+The p value for the general linear test is `r softf[4]`.
+
+> v. Do you reject H0 at α = 0.05? 
+
+No, `r softf[4]` > 0.05. 
+
+> vi. Are the results statistically significant at the 0.05 level? 
+
+No, `r softf[4]` > 0.05, so we fail to reject the null hypothesis and conclude that there is not evidence for the claim that the software package has an effect on sales this quarter once you control for sales last quarter. 
+
+> vii. What proportion of the remaining variation in sales this quarter is explained by software package once you allow for sales last quarter?
+
+```{r prsq}
+softwaremlrr <-
+  lm(SalesThisQuarter ~ SalesLastQuarter,
+     software)
+```
+
+The proportion of the remaining  variation in sales this quarter explained by the software package controlling for last quarter's sales is `r rsq.partial(softwaremlr,softwaremlrr)$partial.rsq`. (Calculated using `rsp.partial`)
+
+## 1C. Fit a full model (with interaction) in which the slopes and intercepts of the regression lines relating sales last quarter to sales this quarter might depend on the kind of software the sales representatives are using.
+
+```{r MLRi}
+softwaremlri <- lm(SalesThisQuarter~as.factor(Software)*SalesLastQuarter,software)
+```
+> i. Write E(y/x). 
+
+E(y|x) = `r summary(softwaremlri)$coefficients[1,1]` + `r summary(softwaremlri)$coefficients[2,1]`software2 + `r summary(softwaremlri)$coefficients[3,1]`software3 + `r summary(softwaremlri)$coefficients[4,1]`Sales Last Quarter + `r summary(softwaremlri)$coefficients[5,1]`software2&ast;Sales Last Quarter + `r summary(softwaremlri)$coefficients[6,1]`software3&ast;Sales Last Quarter
+
+> ii. What is the null hypothesis for testing whether the three slopes are equal?
+
+H0 = $\beta_{software2*Sales Last Quarter}$ = $\beta_{software3*Sales Last Quarter}$ = 0.
+
+> iii. What is the null hypothesis for testing whether the effect of software program on sales this quarter depends on sales last quarter? 
+
+H0 = $\beta_{software2*Sales Last Quarter}$ = $\beta_{software3*Sales Last Quarter}$ = 0.
+
+### iv. Carry out an F-test to determine whether the effect of software type on sales depends on the representative's performance last quarter.
+
+```{r}
+tImatrix <- matrix(c(0,0,0,0,1,0,
+                     0,0,0,0,0,1), 
+                   nrow = 2,
+                   byrow = TRUE
+                   )
+```
+
+
+> A. Give the test statistic. 
+
+The test statistic (F) calculated by `ftest()` is `r ftest(softwaremlri,tImatrix)[1]`.
+
+> B. Give the p-value. 
+
+The p value (p) calculated by `ftest()` is `r ftest(softwaremlri,tImatrix)[4]`.
+
+> C. Do you reject H0 at α = 0.05? 
+
+As `r ftest(softwaremlri,tImatrix)[4]` < 0.05, we reject H0. 
+
+> D. Are the results statistically significant at the 0.05 level?
+
+As we reject the null hypothesis, we can conclude that our results are statistically significant at $\alpha$ = 0.05 and that there is evidence to support the claim that the effect of software type on sales depends on the representative's performance last quarter.
+
+> v. Estimate the slopes and intercepts of the three regression lines. 
+
+- E(SalesThisQuarter|Software = 1) = `r summary(softwaremlri)[[4]][1]` + `r summary(softwaremlri)[[4]][4]`&ast;SalesLastQuarter
+
+- E(SalesThisQuarter|Software = 2) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][2]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][5]`&ast;SalesLastQuarter
+
+- E(SalesThisQuarter|Software = 2) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][3]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][6]`&ast;SalesLastQuarter
+
+### vi. Test whether the slope is different from zero for software package two.
+
+> A. State the null hypothesis.
+
+H0: $\beta_{software2*Sales Last Quarter}$ + $\beta_{Sales Last Quarter}$ =0
+
+> B. Give the test statistic. 
+
+```{r scontrast}
+softs42 <- matrix(c(0,0,0,1,1,0),
+                  nrow=1,
+                  byrow = TRUE)
+summary(softwaremlri)
+```
+The F value is `r ftest(softwaremlri,softs42)[1]`.
+
+> C. Give the p-value. 
+
+The p value is `r ftest(softwaremlri,softs42)[4]`.
+
+> D. Do you reject H0 at α = 0.05? 
+
+As `r ftest(softwaremlri,softs42)[4]` > 0.05, we fail to reject H0.
+
+> E. Are the results statistically significant at the 0.05 level? 
+
+As we fail to reject the null hypothesis, we conclude that the results are not statistically significant and there is not evidence to support the claim that the slope is different from zero for software package two.
+
+## 1D. Test the hypothesis that you would test in order to answer this question: Controlling for sales last quarter, is average expected sales this quarter for software 1 and 3 different from expected sales this quarter for package 2? 
+
+H0: $\frac{\beta_{software2*Sales Last Quarter}}{2}$ + $\frac{\beta_{software2}{2}$ = $\beta_{software2*Sales Last Quarter}$ + $\beta_{software2}$
+
+```{r btest}
+btest <- matrix(c(0,1,-1/2,0,1,-1/2),
+                  nrow=1,
+                  byrow = TRUE)
+ftest(softwaremlri,btest)
+```
+As $\alpha$ < 0.05, we reject the null hypothesis and conclude that there is evidence suggesting that controlling for sales last quarter, average expected sales this quarter for software 1 and 3 is different from expected sales this quarter for package 2.
+
 # Question 2 
 
-> 2.Download the “Explosives dataset” from Moodle. Fit a simple linear regression, relating the deflection of 
-galvonometer (Y) to the area of the wires on the coupling (X). Complete the following parts. 
+2. Pigs are routinely given large doses of antibiotics even when they show no signs of illness, to protect their health under unsanitary conditions. Pigs were randomly assigned to one of three antibiotic drugs. Dressed weight (weight of the pig after slaughter and removal of head, intestines and skin) was the dependent variable. Independent variables are Drug type, Mother's live adult weight and Father's live adult weight.
 
 ```{r import2}
 pigs <- as_tibble(read_table("Datasets/pig.txt",
