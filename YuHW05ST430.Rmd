@@ -57,7 +57,7 @@ softwareslr <- lm(SalesThisQuarter ~ as.factor(Software), software)
 ```
 > i. Write E(y|x).
 
-E(y|x) = `r summary(softwareslr)$coefficients[1,1]` + `r summary(softwareslr)$coefficients[2,1]`software2 + `r summary(softwareslr)$coefficients[3,1]`software3. 
+E(y|x) = `r summary(softwareslr)$coefficients[1,1]` ($\beta_0$) + `r summary(softwareslr)$coefficients[2,1]`($\beta_{software2}$)software2 + `r summary(softwareslr)$coefficients[3,1]`($\beta_{software3}$)software3. 
 
 > ii. What proportion of the variation in sales this quarter is explained by software package? 
 
@@ -94,7 +94,7 @@ softwaremlr <-
 
 > i. Write E(y|x). 
 
-E(y|x) = `r summary(softwaremlr)$coefficients[1,1]` + `r summary(softwaremlr)$coefficients[2,1]`software2 + `r summary(softwaremlr)$coefficients[3,1]`software3 + `r summary(softwaremlr)$coefficients[4,1]`Sales Last Quarter. 
+E(y|x) = `r summary(softwaremlr)$coefficients[1,1]`($\beta_0$) + `r summary(softwaremlr)$coefficients[2,1]`($\beta_{software2}$)software2 + `r summary(softwaremlr)$coefficients[3,1]`($\beta_{software3}$)software3 + `r summary(softwaremlr)$coefficients[4,1]`($\beta_{Sales Last Quarter}$)Sales Last Quarter. 
 
 > ii. What is the null hypothesis for testing whether software package has any effect on sales this quarter once you control for sales last quarter? 
 
@@ -140,7 +140,7 @@ softwaremlri <- lm(SalesThisQuarter~as.factor(Software)*SalesLastQuarter,softwar
 ```
 > i. Write E(y/x). 
 
-E(y|x) = `r summary(softwaremlri)$coefficients[1,1]` + `r summary(softwaremlri)$coefficients[2,1]`software2 + `r summary(softwaremlri)$coefficients[3,1]`software3 + `r summary(softwaremlri)$coefficients[4,1]`Sales Last Quarter + `r summary(softwaremlri)$coefficients[5,1]`software2&ast;Sales Last Quarter + `r summary(softwaremlri)$coefficients[6,1]`software3&ast;Sales Last Quarter
+E(y|x) = `r summary(softwaremlri)$coefficients[1,1]`($\beta_0$) + `r summary(softwaremlri)$coefficients[2,1]`($\beta_{software2}$)software2 + `r summary(softwaremlri)$coefficients[3,1]`($\beta_{software3}$)software3 + `r summary(softwaremlri)$coefficients[4,1]`($\beta_{Sales Last Quarter}$)Sales Last Quarter + `r summary(softwaremlri)$coefficients[5,1]`($\beta_{software2*Sales Last Quarter}$)software2&ast;Sales Last Quarter + `r summary(softwaremlri)$coefficients[6,1]`($\beta_{software3*Sales Last Quarter}$)software3&ast;Sales Last Quarter
 
 > ii. What is the null hypothesis for testing whether the three slopes are equal?
 
@@ -181,9 +181,15 @@ As we reject the null hypothesis, we can conclude that our results are statistic
 
 - E(SalesThisQuarter|Software = 1) = `r summary(softwaremlri)[[4]][1]` + `r summary(softwaremlri)[[4]][4]`&ast;SalesLastQuarter
 
+or $\beta_0$ + $\beta_{Sales Last Quarter}$&ast;Sales Last Quarter 
+
 - E(SalesThisQuarter|Software = 2) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][2]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][5]`&ast;SalesLastQuarter
 
-- E(SalesThisQuarter|Software = 2) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][3]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][6]`&ast;SalesLastQuarter
+or $\beta_0$ + $\beta_{software2}$ + ($\beta_{Sales Last Quarter}$ + $\beta_{software2*Sales Last Quarter}$)&ast;Sales Last Quarter 
+
+- E(SalesThisQuarter|Software = 3) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][3]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][6]`&ast;SalesLastQuarter
+
+or $\beta_0$ + $\beta_{software3}$ + ($\beta_{Sales Last Quarter}$ + $\beta_{software3*Sales Last Quarter}$)&ast;Sales Last Quarter 
 
 ### vi. Test whether the slope is different from zero for software package two.
 
@@ -197,7 +203,6 @@ H0: $\beta_{software2*Sales Last Quarter}$ + $\beta_{Sales Last Quarter}$ =0
 softs42 <- matrix(c(0,0,0,1,1,0),
                   nrow=1,
                   byrow = TRUE)
-summary(softwaremlri)
 ```
 The F value is `r ftest(softwaremlri,softs42)[1]`.
 
@@ -215,7 +220,7 @@ As we fail to reject the null hypothesis, we conclude that the results are not s
 
 ## 1D. Test the hypothesis that you would test in order to answer this question: Controlling for sales last quarter, is average expected sales this quarter for software 1 and 3 different from expected sales this quarter for package 2? 
 
-H0: $\frac{\beta_{\text{software2*Sales Last Quarter}}}{2}$ + $\frac{\beta_{\text{software2}}}{2}$ = $\beta_{\text{software2*Sales Last Quarter}}$ + $\beta_{\text{software2}}$
+H0: $\frac{\beta_{\text{software3*Sales Last Quarter}}}{2}$ + $\frac{\beta_{\text{software3}}}{2}$ = $\beta_{\text{software2*Sales Last Quarter}}$ + $\beta_{\text{software2}}$
 
 ```{r btest}
 btest <- matrix(c(0,1,-1/2,0,1,-1/2),
@@ -234,23 +239,23 @@ library(readr)
 pigs <- as_tibble(read_table("Datasets/pig.txt",
                              col_names = TRUE))
 pigs <- add_column(pigs,
-                   c2 = ifelse(pigs$Drug == 2, 1, 0),
-                   c3 = ifelse(pigs$Drug == 3, 1, 0))
+                   D_2 = ifelse(pigs$Drug == 2, 1, 0),
+                   D_3 = ifelse(pigs$Drug == 3, 1, 0))
 ```
 
 > a. Write the regression equation for the full model, including error term.
 
 ```{r fullmodel}
-pigsm <- lm(Pigweight~Momweight + Dadweight + c2 +c3,pigs)
+pigsm <- lm(Pigweight~Momweight + Dadweight + D_2 + D_3,pigs)
 ```
 The regression equation is
 
-E(Pigweight|x) = `r summary(pigsm)$coefficients[1,1]` + `r summary(pigsm)$coefficients[2,1]`&ast;Momweight + `r summary(pigsm)$coefficients[3,1]`&ast;Dadweight + `r summary(pigsm)$coefficients[4,1]`&ast;Drug2+ `r summary(pigsm)$coefficients[5,1]`&ast;Drug3 + $\epsilon$
+E(Pigweight|x) = `r summary(pigsm)$coefficients[1,1]`($\beta_0$) + `r summary(pigsm)$coefficients[2,1]`($\beta_{Momweight}$)&ast;Momweight + `r summary(pigsm)$coefficients[3,1]`($\beta_{Dadweight}$)&ast;Dadweight + `r summary(pigsm)$coefficients[4,1]`($\beta_{drug2}$)&ast;Drug2+ `r summary(pigsm)$coefficients[5,1]`($\beta_{drug3}$)&ast;Drug3 + $\epsilon$
 
 > b. Make a table with one row for every drug, with columns showing how the dummy variables were defined. Make another column giving E(y/x) for each drug controlling other predictor variables.
 
 ```{r ptable}
-ptable <- pigs %>% select(Drug, c2, c3) %>% distinct() %>%
+ptable <- pigs %>% select(Drug, D_2, D_3) %>% distinct() %>%
   
   add_column("E(Y|x)" = c(
     paste0(
@@ -283,7 +288,8 @@ ptable <- pigs %>% select(Drug, c2, c3) %>% distinct() %>%
       round(summary(pigsm)$coefficients[3, 1], 3),
       "*Dadweight"
     )
-  ))
+  )
+  )
 
 ptable
 ```
@@ -293,15 +299,11 @@ ptable
 
 ```{r pred}
 pigpred <- tibble(
-  c2=1,
-  c3=0,
+  D_2=1,
+  D_3=0,
   Momweight = 140,
   Dadweight = 185
 )
-
-predict(pigsm,pigpred,interval = "prediction",level=0.95)
-
-predict(pigsm,pigpred,interval = "prediction",level=0.95)[1]
 ```
 The dressed weight of a pig getting Drug 2, whose mother weighed 140 pounds, and whose father weight 185 pounds is `r predict(pigsm,pigpred,interval = "prediction",level=0.95)[1]`, with a prediction interval of (`r predict(pigsm,pigpred,interval = "prediction",level=0.95)[2]`,`r predict(pigsm,pigpred,interval = "prediction",level=0.95)[3]` )
 	
@@ -309,7 +311,7 @@ The dressed weight of a pig getting Drug 2, whose mother weighed 140 pounds, and
 
 Null hypothesis: $\beta_{drug2}$ = 0. 
 
-So we can use the t value directly from the `summary()` output. Thus, using `confint()` with t = `r summary(pigsm)$coefficients[4,3]` and df = `r 70`, we derive a 95% confidence interval of (`r confint(pigsm,"c2",evel=0.95)[1]`, `r confint(pigsm,"c2",evel=0.95)[2]`)
+So we can use the t value directly from the `summary()` output. Thus, using `confint()` with t = `r summary(pigsm)$coefficients[4,3]` and df = `r 70`, we derive a 95% confidence interval of (`r confint(pigsm,"D_2",evel=0.95)[1]`, `r confint(pigsm,"D_2",evel=0.95)[2]`)
 
 > e. In symbols, give the null and alternate hypotheses you would test to answer the following questions. Your answers are statements involving the $/beta$ values from your regression equation. Give the value of the t or F statistic (a number from the printout), and indicate whether or not you reject the null hypothesis.
 
@@ -324,11 +326,12 @@ ftest(pigsm,pigshi)
 ```
 
 H0: $\beta_{drug2}$ = $\beta_{drug3}$ = 0
+
 HA: At least $\beta_{drug2}$ or $\beta_{drug3}$ $\neq$ 0.
 
 F = `r ftest(pigsm,pigshi)[1]`
 
-As p< 0.05, we reject the null hypothesis and conclude that there is enough evidence to support the claim that type of drug does have an effect on the expected weight of a pig, controlling for mother's weight and father's weight, at $\alpha$ -= 0.05. 
+As p< 0.05, we reject the null hypothesis and conclude that there is enough evidence to support the claim that type of drug does have an effect on the expected weight of a pig, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
 
 
 > ii. Controlling for mother's weight and father's weight, which drug helps the average pig gain more weight, Drug 1 or Drug 2?
@@ -338,11 +341,12 @@ summary(pigsm)$coefficients
 ```
 
 H0: $\beta_{drug2}$ = 0
-HA: $\beta_{drug2}$ = 0 $\neq$ 0.
+
+HA: $\beta_{drug2}$ $\neq$ 0.
 
 t = `r summary(pigsm)$coefficients[4,3]`
 
-As p< 0.05, we reject the null hypothesis and conclude that there is enough evidence to support the claim that Drug 1 helps the average pig gain more weight than Drug 2, controlling for mother's weight and father's weight, at $\alpha$ -= 0.05. 
+As p< 0.05, we reject the null hypothesis and conclude that there is enough evidence to support the claim that Drug 1 helps the average pig gain more weight than Drug 2, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
 
 > iii. Controlling for mother's weight and father's weight, which drug helps the average pig gain more weight, Drug 1 or Drug 3?
 
@@ -351,27 +355,26 @@ summary(pigsm)$coefficients
 ```
 
 H0: $\beta_{drug3}$ = 0
-HA: $\beta_{drug3}$ = 0 $\neq$ 0.
+
+HA: $\beta_{drug3}$ $\neq$ 0.
 
 t = `r summary(pigsm)$coefficients[5,3]`
 
-As p> 0.05, we fail to reject the null hypothesis and conclude that there is not enough evidence to support the claim that either Drug 1 or Drug 3 helps the average pig gain more weight, controlling for mother's weight and father's weight, at $\alpha$ -= 0.05. 
+As p> 0.05, we fail to reject the null hypothesis and conclude that there is not enough evidence to support the claim that either Drug 1 or Drug 3 helps the average pig gain more weight, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
 
 > iv. Controlling for mother's weight and father's weight, which drug helps the average pig gain more weight, Drug 2 or Drug 3?
 
 ```{r hiv}
-pigshi <- matrix(c(0,0,0,1,-1),
+pigshiv <- matrix(c(0,0,0,1,-1),
                   nrow=1,
                   byrow = TRUE)
-ftest(pigsm,pigshi)
-ftest(pigsm,pigshi)[1]
-
-summary(pigsm)
+ftest(pigsm,pigshiv)
 ```
 
 H0: $\beta_{drug2}$ = $\beta_{drug3}$
+
 HA: $\beta_{drug2}$ $\neq$ $\beta_{drug3}$.
 
-F = `r ftest(pigsm,pigshi)[1]`
+F = `r ftest(pigsm,pigshiv)[1]`
 
-As p> 0.05, we fail to reject the null hypothesis and conclude that there is not enough evidence to support the claim that either Drug 2 or Drug 3 helps the average pig gain more weight, controlling for mother's weight and father's weight, at $\alpha$ -= 0.05. 
+As p> 0.05, we fail to reject the null hypothesis and conclude that there is not enough evidence to support the claim that either Drug 2 or Drug 3 helps the average pig gain more weight, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 

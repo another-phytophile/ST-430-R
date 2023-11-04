@@ -574,5 +574,3 @@ surg.datasp
 - p value: `r surg.datasp$p.value`
 
 As p < 0.05, we reject H0 at $\alpha$ = 0.05 and conclude that there is statistically significant evidence that the random error is not normally distributed. This means that we cannot assume that the random error is normally distributed for our model, and thus a linear regression without transformation of the data is not advised. 
-
-H0: $\frac{\beta_{software2*Sales Last Quarter}}{2}$ + $\frac{\beta_{software2}{2}$ = $\beta_{software2*Sales Last Quarter}$ + $\beta_{software2}$
