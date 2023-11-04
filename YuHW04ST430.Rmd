@@ -44,16 +44,16 @@ ftest = function(model, L, h = 0)
 
 # Question 1
 
-> Problem1A: For this problem, use the Commercial Property data set from KNNL Problem 6.18. The response variable is rental rates. The explanatory variables are age, operating  expenses and taxes, vacancy rates, and total square footage.
+> Problem1A: For this problem, use the Commercial Property data set from KNNL Problem 6.18. The response variable is rental rates. The explanatory variables are age, operating  expenses and vaces, vacancy rates, and total square footage.
 
 
 ```{r import 1}
 Property <- as_tibble(read_table("https://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%206%20Data%20Sets/CH06PR18.txt",
-            col_names = c("rrate","age","opex","tax","sqft")
+            col_names = c("rrate","age","opex","vac","sqft")
             ))
 ```
 
-## 1. Obtain a scatterplot matrix for all 5 variables (age, operating expenses and taxes, vacancy rates, total square  footage, and rental rates) and give your comments about linearity of variables.
+## 1. Obtain a scatterplot matrix for all 5 variables (age, operating expenses and vaces, vacancy rates, total square  footage, and rental rates) and give your comments about linearity of variables.
 
 ```{r pplot}
 pairs(Property)
@@ -70,16 +70,16 @@ PropertyCor
 
 My observations seem to be borne out, as the largest correlations (abs value) seem to be between rental rate and operating expenses (`r PropertyCor[3,1]`), rental rate and square footage ( `r PropertyCor[5,1]`), and square footage and operating expenses ( `r PropertyCor[3,5]`).
 
-## 3) Run the multiple regressions with age, operating expenses and taxes, vacancy rates, and total square footage as the  explanatory variables and rental rates as the response variable.
+## 3) Run the multiple regressions with age, operating expenses and vaces, vacancy rates, and total square footage as the  explanatory variables and rental rates as the response variable.
 
 ```{r MLR}
-Propertym <- lm(rrate~age + opex + tax + sqft,Property)
+Propertym <- lm(rrate~age + opex + vac + sqft,Property)
 ```
 
  
 ### a) Give the fitted (Estimated) regression equation.
 
-Rental Rate ($Y_i$) = `r round(summary(Propertym)$coeff[1,1],3)`($beta_0$) + `r round(summary(Propertym)$coeff[2,1],3)`age($beta_1$)  + `r round(summary(Propertym)$coeff[3,1],3)`Operating_Expenses($beta_2$) + `r round(summary(Propertym)$coeff[4,1],3)`Tax($beta_3$) + `r summary(Propertym)$coeff[5,1]`Square_Footage($beta_4$)
+Rental Rate ($Y_i$) = `r round(summary(Propertym)$coeff[1,1],3)`($beta_0$) + `r round(summary(Propertym)$coeff[2,1],3)`age($beta_1$)  + `r round(summary(Propertym)$coeff[3,1],3)`Operating_Expenses($beta_2$) + `r round(summary(Propertym)$coeff[4,1],3)`vac($beta_3$) + `r summary(Propertym)$coeff[5,1]`Square_Footage($beta_4$)
 
 ### b) Interpret the estimated parameters in the context of the problem
 
@@ -87,7 +87,7 @@ For each incremental increase in Age, holding all other variables constant, ther
 
 For each incremental increase in Operating Expenses, holding all other variables constant, there is a  `r round(summary(Propertym)$coeff[3,1],3)`increase in rental rate.
 
-For each incremental increase in Tax, holding all other variables constant, there is a `r round(summary(Propertym)$coeff[4,1],3)` decrease in rental rate.
+For each incremental increase in vac, holding all other variables constant, there is a `r round(summary(Propertym)$coeff[4,1],3)` decrease in rental rate.
 
 For each increase in 100,000 Square Feet, holding all other variables constant, there is a `r round(summary(Propertym)$coeff[5,1]*100000,3)` increase in rental rate.
 
@@ -101,43 +101,76 @@ $r^2_{adj}$ = `r summary(Propertym)$adj.r.sq`
 statistic and its associated degrees of freedom, the  p-value, and a brief conclusion in words.
 
 ```{r ptable}
-summary(Propertym) 
-# Propertytable <- pigs %>% select(Drug, D_2, D_3) %>% distinct() %>%
-#   
-#   add_column("E(Y|x)" = c(
-#     paste0(
-#       round(summary(pigsm)$coefficients[1, 1], 3),
-#       " + ",
-#       round(summary(pigsm)$coefficients[2, 1], 3),
-#       "*Momweight + ",
-#       round(summary(pigsm)$coefficients[3, 1], 3),
-#       "*Dadweight"
-#     ),
-#     paste0(
-#       round(
-#         summary(pigsm)$coefficients[1, 1] + summary(pigsm)$coefficients[4, 1],
-#         3
-#       ),
-#       " + ",
-#       round(summary(pigsm)$coefficients[2, 1], 3),
-#       "*Momweight + ",
-#       round(summary(pigsm)$coefficients[3, 1], 3),
-#       "*Dadweight"
-#     ),
-#     paste0(
-#       round(
-#         summary(pigsm)$coefficients[1, 1] + summary(pigsm)$coefficients[5, 1],
-#         3
-#       ),
-#       " + ",
-#       round(summary(pigsm)$coefficients[2, 1], 3),
-#       "*Momweight + ",
-#       round(summary(pigsm)$coefficients[3, 1], 3),
-#       "*Dadweight"
-#     )
-#   )
-#   )
-# 
-# ptable
+Propertytable <- data.frame("H0"=c("b1 = b2 = b3 = b4 =0",
+                                "b0=0",
+                                "b1-0",
+                                "b2=0",
+                                "b3=0",
+                                "b4-0"),
+                            "Test Statistic" = c (round(summary(Propertym)$fstat[1],3),
+                                                round(summary(Propertym)$coeff[1,3],3),
+                                                round(summary(Propertym)$coeff[2,3],3),
+                                                round(summary(Propertym)$coeff[3,3],3),
+                                                round(summary(Propertym)$coeff[4,3],3),
+                                                round(summary(Propertym)$coeff[5,3],3)
+                             
+                            ),
+                            "p-value" = c(1-pf(summary(Propertym)$fstat[1],summary(Propertym)$fstat[2],summary(Propertym)$fstat[3]),
+                                                summary(Propertym)$coeff[1,4],
+                                                summary(Propertym)$coeff[2,4],
+                                                summary(Propertym)$coeff[3,4],
+                                                summary(Propertym)$coeff[4,4],
+                                                summary(Propertym)$coeff[5,4]),
+                            "Reject H0?" = c("Yes",
+                                             "Yes",
+                                             "Yes",
+                                             "Yes",
+                                             "No",
+                                             "Yes")
+                            ) %>% as_tibble()
+
+Propertytable 
 ```
  
+Conclusion
+
+- row1: as p<0.05, we reject H0 and conclude that there is evidence to support a linear relationship between at least one of the predictor variables and the response variable
+
+- row2: as p<0.05, we reject H0 and conclude that there is evidence to support the claim that controlling for all other variables, the intercept is nonzero.
+
+- row3: as p<0.05, we reject H0 and conclude that there is evidence to support the claim that controlling for all other variables, there exists a linear relationship between age and rental rate.
+
+- row4: as p<0.05, we reject H0 and conclude that there is evidence to support the claim that controlling for all other variables, there exists a linear relationship between operating expenses and rental rate.
+
+- row5: as p>0.05, we reject H0 and conclude that there is evidence to support the claim that controlling for all other variables, there exists a linear relationship between Vacancy and rental rate.
+
+- row6: as p<0.05, we reject H0 and conclude that there is evidence to support the claim that controlling for all other variables, there exists a linear relationship between apartment square footage and rental rate.
+
+
+### e) Use the general linear test approach to test whether  β3 and β4 (slopes for vacancy rate and footage) are  significantly different from zero (dropped simultaneously), use significance level of 0.05.
+
+```{r GLT}
+Propertymr <- lm(rrate~age + opex,data=Property)
+anova(Propertymr,Propertym)
+```
+
+As p <0.05, we conclude at the level $\alpha$ = 0.05 that we can reject the null hypothesis and conclude that the is enough evidence to support the claim that there is a statistically significant difference between the 2 models and thus that $\beta_3$ ans $\beta_4$ are significantly different from 0. 
+
+###f): Test Ho: β3=0 versus Ha: β3 ≠ 0 using General linear model approach.
+
+```{r GLT2}
+propertyi <- matrix(c(0,0,0,1,0),
+                  nrow=1,
+                  byrow = TRUE)
+ftest(Propertym,propertyi)
+```
+
+### g) Remove any insignificant explanatory variables in the  model and refit the new regression model with only significant variables. 
+
+```{r reduced}
+step(Propertym)
+Propertymrf <- lm(rrate~age+opex+sqft,data=Property)
+summary(Propertymrf)
+```
+
+Using a Stepwise Regression, we see the only predictive variable we can  remove from the full model is vacancy rate. 
