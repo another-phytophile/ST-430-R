@@ -174,3 +174,209 @@ summary(Propertymrf)
 ```
 
 Using a Stepwise Regression, we see the only predictive variable we can  remove from the full model is vacancy rate. 
+
+## 4) ** Confidence intervals for the regression coefficients for 
+the final model. **
+
+### I. Give the 90% confidence intervals for each of the regression coefficients. (Where 0.90 is the = "statement confidence coefficient".)
+
+```{r confint}
+confint(Propertymrf,level = 0.90) 
+```
+
+### II. Give Bonferroni Joint 90% confidence intervals for each of the regression coefficients. (Where  0.90 is the "family confidence coefficient".)
+
+```{r bconfint}
+confint(Propertymrf,level = (1-(.1/4)))
+```
+
+### III. We would like to obtain simultaneous interval estimates of the mean rental rates for four typical properties specified below. Obtain the 
+family of estimates using a 95% family confidence coefficient.
+
+```{r predb}
+bonpred <- data.frame("age"=c(5.0,6.0,14.0,12.0),
+           "opex"=c(8.25,8.50,11.50,10.25),
+           "sqft"=c(250000,270000,300000,310000)
+)
+bonpred
+predict(Propertymrf,
+        bonpred,
+        interval = "predict",
+        level = (1 - (.05 / 3)))
+```
+
+### IV. Develop separate prediction intervals for the rental rates of these properties, using a 95% statement confidence coefficient in each case
+
+```{r pred}
+simpred <-data.frame("age"=c(4.0,6.0,12.0),
+           "opex"=c(10.0,11.5,12.5),
+           "sqft"=c(80000,120000,340000)
+)
+simpred
+predict(Propertymrf,
+        simpred,
+        interval = "predict",
+        level = 0/95
+        )
+```
+
+## 5) Diagnostic Plots and Tests:
+
+### a) Plot the residuals against the predicted (fitted) 
+rental rate. Comment on the plot.
+
+```{r fitplot1}
+
+Propertymrff <- tibble(
+  "fit" = Propertymrf$fitted.values,
+  "resid" = Propertymrf$residuals
+)
+
+ggplot(Propertymrff,aes(x=fit,y=resid))+
+  geom_jitter(color="salmon")+
+  geom_hline(yintercept = 0, linetype="dotted")+
+  labs(title = paste("Q1: Residuals Versus Fitted Values for the Property Data Set"),
+         subtitle = "by Jerry Yu")+ 
+  theme(plot.title = element_text(size = 14))
+```
+
+The residuals seem to be randomly distributed around 0, and the plot lacks any fan or funnel shapes. There is no evidence to support that variance is nonlinear or nonconstant. 
+
+### b) Give a QQ-plot, boxplot and histogram of the residuals with normal curve. State your conclusions from these plots.
+
+```{r 3graphs, warning=FALSE}
+Propertymrfs <- add_column(Propertymrff, "rstandardized"=rstandard(Propertym))
+
+ggplot(data = Propertymrfs, aes(sample = resid))+
+  geom_qq( color="coral")+
+  geom_qq_line( color="turquoise")+
+  labs(
+    title = paste("Q1: QQ Plot of Residuals for Property Linear Regression Model"),
+    subtitle = "by Jerry Yu"
+  ) +
+  xlab("Theoretical Quantiles")+
+  ylab("Sample Quantiles")
+
+ggplot(Propertymrfs,aes(x=factor(NA,NA,NA),y=resid))+
+  geom_boxplot(color="darkblue",fill="lavender",outlier.color="red")+
+  labs(
+    title = paste("Box Plot of Residuals for Data Set Property"),
+    subtitle = "by Jerry Yu"
+  ) +
+  ylab("Residuals") +
+  xlab("")+
+  scale_x_discrete(labels=NULL)
+  
+  
+
+ggplot(data = Propertymrfs, aes(x = resid)) +
+  geom_histogram(fill = "lightblue", aes(y=after_stat(density))) +
+  stat_function(fun = dnorm, color="darkgreen")+
+  labs(
+    title = paste("Histogram of Residuals for Data Set Property, \nNormal Curve Reference"),
+    subtitle = "by Jerry Yu"
+  ) +
+  ylab("Density of Residuals")
+  
+```
+
+
+### c) Conduct Breusch-Pagan Test for the constancy of the 
+error variance.
+
+```{r bp1}
+Propertymrfbp <- bptest(Propertymrf,studentize = FALSE)
+Propertymrfbp
+```
+As p <0.05, we conclude that at $\alpha$ = 0.05 that there is enough evidence to reject the null hypothesis and support the claim that the variances are unequal.
+
+### d) Index Plot to test for Independence of errors. Conduct 
+Durbin-Watson Test.
+
+```{r index durbinwat}
+ggplot(Propertymrff, aes(x = 1:length(resid), y = resid)) +
+  geom_point(color = "aquamarine") +
+  labs(x = "Index",
+       title = "Residual Time Sequence Plot for Property Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "darkblue",
+             linetype = "dotdash")
+
+Propertymw <-durbinWatsonTest(Propertymrf)
+Propertymw
+```
+I used the `car` test where the alternative hypothesis is 2 sided. As p < 0.05, we conclude that at $\alpha$ = 0.05 that there is enough evidence to reject the null hypothesis and support the claim that true autocorrelation is not equal to zero.
+
+### e) Conduct a Shapiro-Wilk Test on the residuals. Give 
+the p-value for this test and explain what this means 
+in terms of our model assumptions.
+
+```{r shapiro1}
+shap1 <- shapiro.test(Propertymrfs$resid)
+shap1
+```
+
+- H0: The random error is normally distributed
+
+- Ha: The random error is not normally distributed 
+
+- Test Statistic: `r shap1$statistic`
+
+- p value: `r shap1$p.value`
+
+As p > 0.05, we fail to reject H0 at $\alpha$ = 0.05 and conclude that there is no statistically significant evidence that the random error is not normally distributed. 
+
+### f) Deduct any outliers.
+
+```{r outid}
+Propertymro <- filter(Propertymrfs,abs(rstandardized) >2)
+Propertymro
+```
+
+
+done in Q6
+
+## 6) Remove the outliers and refit the model to see how much difference in R2 and adj R2
+
+```{r woutliers}
+Propertyhmerge <- bind_cols(Property,Propertymrfs)
+Propertywo <- filter(Propertyhmerge,abs(rstandardized) <=2)
+Propertywom <- lm(rrate~age+opex+sqft,data=Propertywo)
+summary(Propertywom)
+
+sumtable <- tibble("Name"=c("R^2","Adj R^2"),
+                    "Full Model" = c(summary(Propertym)$r.sq,summary(Propertym)$adj.r.sq),
+                    "Reduced Model" = c(summary(Propertymrf)$r.sq,summary(Propertymrf)$adj.r.sq),
+                    "Reduced Model \nwout Outliers" = c(summary(Propertywom)$r.sq,summary(Propertywom)$adj.r.sq),
+                   "Reduced MOdel Difference" = c(summary(Propertymrf)$r.sq-summary(Propertywom)$r.sq, summary(Propertymrf)$adj.r.sq-summary(Propertywom)$adj.r.sq)
+                   )
+
+sumtable
+summary(Propertym)$r.sq
+summary(Propertymrf)$r.sq
+summary(Propertywom)$r.sq
+```
+
+When we remove outliers, the R squared and Adjusted R squared values increase. 
+
+# Problem1B:
+
+## 1) Write the regression equation in matrix form
+
+Y = X$\beta$ + $\epsilon$
+
+## i) what are the dimenions of X, (row, column) form.
+
+(81,4)
+
+## ii) what are the dimesions of $\beta$ hat = b? (row, column) form.
+
+(4,1)
+
+## iii) What are the dimensions of $\epsilon$ hat = e ? The answer is a pair 
+of numbers, number of rows and number of columns.
+
+(81,1)
+
+
