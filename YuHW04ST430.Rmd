@@ -17,6 +17,7 @@ library(usethis)
 library(lmtest)
 library(car)
 library(rsq)
+library(Metrics)
 ftest = function(model, L, h = 0)
   # General linear test of H0: L beta = h
 {
@@ -343,7 +344,6 @@ done in Q6
 Propertyhmerge <- bind_cols(Property,Propertymrfs)
 Propertywo <- filter(Propertyhmerge,abs(rstandardized) <=2)
 Propertywom <- lm(rrate~age+opex+sqft,data=Propertywo)
-summary(Propertywom)
 
 sumtable <- tibble("Name"=c("R^2","Adj R^2"),
                     "Full Model" = c(summary(Propertym)$r.sq,summary(Propertym)$adj.r.sq),
@@ -353,9 +353,6 @@ sumtable <- tibble("Name"=c("R^2","Adj R^2"),
                    )
 
 sumtable
-summary(Propertym)$r.sq
-summary(Propertymrf)$r.sq
-summary(Propertywom)$r.sq
 ```
 
 When we remove outliers, the R squared and Adjusted R squared values increase. 
@@ -368,7 +365,7 @@ Y = X$\beta$ + $\epsilon$
 
 ## i) what are the dimenions of X, (row, column) form.
 
-(81,4)
+(77,4)
 
 ## ii) what are the dimesions of $\beta$ hat = b? (row, column) form.
 
@@ -377,6 +374,42 @@ Y = X$\beta$ + $\epsilon$
 ## iii) What are the dimensions of $\epsilon$ hat = e ? The answer is a pair 
 of numbers, number of rows and number of columns.
 
-(81,1)
+(77,1)
 
+iv. What are the dimensions of e'e?
 
+(1,1)
+
+v. What are the dimensions of the y hat matrix? The answer is a pair of numbers, number of rows and number of columns.
+
+(77,1)
+
+vi. What are the dimensions of the hat matrix H? The answer is a pair of numbers, number of rows and number  of columns.
+
+(77,77)
+
+vii. What is e'e?
+
+```{r mresid}
+e <- as.matrix(Propertywom$resid)
+
+t(e)%*%e
+```
+## 2. Calculate: Let your Xh values be the average of all predictor variables.
+
+```{r mcalc}
+y <- as.matrix(Propertywo[,1])
+x <- Propertywo[,c(2,3,5)] %>% mutate("int" =1) %>% select(int,everything()) %>%  as.matrix()
+```
+
+betahat
+
+```{r mcalc1}
+solve(t(x)%*%x)%*%t(x)%*%y
+```
+variance
+
+```{r mvar}
+mse <- (t(e)%*%e)[1]
+mse*solve(t(x)%*%x)
+```
