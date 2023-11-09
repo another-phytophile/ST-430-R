@@ -1,0 +1,80 @@
+---
+title: "Hw04ST430Yu"
+author: "Haozhe (Jerry) Yu"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(ggpmisc)
+library(dplyr)
+library(tidyverse)
+library(tinytex)
+library(usethis)
+library(lmtest)
+library(car)
+```
+
+# Question 1A
+
+Problem1A: For this problem, use the Commercial Property data set from KNNL Problem 6.18. The response variable is rental rates. The explanatory variables are age, operating expenses and taxes, vacancy rates, and total square footage.
+
+
+```{r import 1}
+Comm <- as_tibble(read.table("https://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%206%20Data%20Sets/CH06PR18.txt", 
+            #sep = "", 
+            strip.white=TRUE,
+            col.name = c("Rrate","Age","OpexnTax","Vacancy","Tsqft")
+            ))
+Comm
+```
+
+
+## 1) Obtain a scatterplot matrix for all 5 variables (age, operating expenses and taxes, vacancy rates, total square footage, and rental rates) and give your comments about linearity of variables.
+
+
+```{r scat}
+pairs(Comm[, c('Age', 'OpexnTax', 'Vacancy', 'Tsqft', 'Rrate')])
+```
+
+While the majority of relationships in the matrix appear nonlinear, there are some that might have a positive linear association (like Rental Rates and Total Square Feet and Operating Expenses and Operating and Rate Expenses). 
+
+## 2) Find the correlation of all pairs of variables and give your comments about the association between variables.
+
+
+```{r Correlations}
+
+CommCor <- cor(Comm[, c('Age', 'OpexnTax', 'Vacancy', 'Tsqft', 'Rrate')])
+
+CommCor
+```
+
+There seem to be weak correlations between many variables. The strongest negative correlations seems to be between Vacancy Rate and Operating Expenses, and the strongest positive correlation seems to be between Total square Feet and Rental Rate. Like shown on the graphs, there seem to be modestly strong correlations between rental rate and Age and Vacancy rate. 
+
+## 3) Run the multiple regressions with age, operating expenses and taxes, vacancy rates, and total square footage as the explanatory variables and rental rates as the response variable.
+
+```{r commfit}
+Commm <- lm(Rrate ~ Age + OpexnTax + Vacancy + Tsqft, data=Comm)
+summary(Commm)
+```
+
+### a.) Give the fitted (Estimated) regression equation.
+
+Rental Rate = 1.220e+01 + -1.420e-01*Age + 2.820e-01*Operating Expenses and Taxes + 6.193e-01*Vacancy Rate + 7.924e-06*Total Square Foot. 
+
+### b) Interpret the estimated parameters in the context of the problem.
+
+For each incremental increase in one year of age, for a given level of operating expenses, vacancy rate, and total square footage, the rental rate increases by -1.420e-01. 
+
+For each incremental increase of $1 in operating expenses and taxes, for a given age, vacancy rate, and total square footage, the rental rate increases by 2.820e-01. 
+
+For each incremental increase of 1% in vacancy rate, for a given age, operating expenses and taxes, and total square footage, the rental rate increases by 6.193e-01. 
+
+For each incremental increase of 1 square feet in total square footage, for a given age, operating expenses and taxes, and vacancy rate, the rental rate increases by 7.924e-06.
+
+### c)c) Give the value of R2 and Adj R2
+
+Multiple R-squared:  0.5847,	Adjusted R-squared:  0.5629 
