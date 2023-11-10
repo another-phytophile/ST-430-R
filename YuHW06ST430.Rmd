@@ -1,5 +1,5 @@
 ---
-title: "Hw05ST430Yu"
+title: "Hw06ST430Yu"
 author: "Haozhe (Jerry) Yu"
 date: "`r Sys.Date()`"
 output: 
@@ -17,6 +17,7 @@ library(usethis)
 library(lmtest)
 library(car)
 library(rsq)
+library(leaps)
 ftest = function(model, L, h = 0)
   # General linear test of H0: L beta = h
 {
@@ -44,337 +45,47 @@ ftest = function(model, L, h = 0)
 
 # Question 1
 
-```{r import 1}
-software <- as_tibble(read_table("Datasets/software.txt",
-            col_names = TRUE,
-            ))
+A researcher studied the effects of the charge rate and temperature on the life of a new type of power cell in a preliminary small-scale experiment. The charge rate (Xl) was controlled at three levels (0.6, 1.0, and 1.4 amperes) and the ambient temperature (X2) was controlled at three levels (l0, 20, 30°C). Factors pertaining to the discharge of the power cell were held at fixed levels. The life of the power cell (Y) was measured in terms of the number of discharge-charge cycles that a power cell underwent before it failed.
+
+The researcher was not sure about the nature of the response function in the range of the factors studied. Hence, the researcher decided to fit the second-order polynomial regression model
+
+```{r import1}
+data <- read.table("Datasets/battery.txt", header=FALSE)
+names(data) <- c("cycles","rate","temp")
+attach(data)
 ```
 
-## 1A. Fit a model in which sales last quarter is ignored. We want to know whether software package has any effect on sales.
+##a.	Find the correlation matrix and report any high correlation between predictor variables.
 
-```{r SLR}
-softwareslr <- lm(SalesThisQuarter ~ as.factor(Software), software)
+```{r cor1}
+cor(data)
 ```
-> i. Write E(y|x).
+The correlation between cycles and temp is 0.7512159. This is high and could be a sign of multicollinearity. 
 
-E(y|x) = `r summary(softwareslr)$coefficients[1,1]` ($\beta_0$) + `r summary(softwareslr)$coefficients[2,1]`($\beta_{software2}$)software2 + `r summary(softwareslr)$coefficients[3,1]`($\beta_{software3}$)software3. 
+##b.	Fit a full model (Shown above) and report the overall F value and individual t-values. Do you suspect any multicollinearity problem?
 
-> ii. What proportion of the variation in sales this quarter is explained by software package? 
 
-The proportion of the variation in sales this quarter that can be explained w the software package is `r summary(softwareslr)[[8]][1]`.
-
- > iii. What is the null hypothesis for testing whether software package has any effect on sales? 
- 
- H0: The type of software package has no effect on sales this quarter. That is $\beta_{software2}$ = $\beta_{software3}$ = 0.
-
-> iv. Give the test statistic. 
-
-The test statistic is `r summary(softwareslr)[[10]][1]`.
-
-> v. Give the p-value. 
-
-The p value is `r pf(summary(softwareslr)$fstatistic[1],summary(softwareslr)$fstatistic[2],summary(softwareslr)$fstatistic[3],lower.tail=F)`.
-
-> vi. Do you reject H0 at α = 0.05? 
-
-No, `r pf(summary(softwareslr)$fstatistic[1],summary(softwareslr)$fstatistic[2],summary(softwareslr)$fstatistic[3],lower.tail=F)` > 0.05.
-
-> vii. Are the results statistically significant at the 0.05 level? 
-
-No, the results are not significant at the 0.05 level because out p value is higher than 0.05. We fail to reject the null hypothesis and conclude there is not enough evidence to support the claim that the type of software package has an effect on the sales for this quarter, if we ignore the sales form last quarter. 
-
-## 1B. Fit a model with software package and sales last quarter as the explanatory variables, and sales this quarter as the response variable.
-
-```{r MLR}
-softwaremlr <-
-  lm(SalesThisQuarter ~ as.factor(Software) + SalesLastQuarter,
-     software)
+```{r fmod}
+mod1<-lm(cycles~rate+temp+I(rate^2)+I(temp^2)+ I(rate*temp))
+summary(mod1)
 ```
+Yes I do. The overall p value for the ANOVA is < 0.05, but each of the individual regression coefficient's p values are more than 0.05. This is a sign of multicollinearity. Additionaly, this is a polynomial regression that has not been centered so by definition it will have structural multicollinearity. 
 
+## c.	We can remove the high correlation between explanatory variables and their powers by centering. 
 
-> i. Write E(y|x). 
-
-E(y|x) = `r summary(softwaremlr)$coefficients[1,1]`($\beta_0$) + `r summary(softwaremlr)$coefficients[2,1]`($\beta_{software2}$)software2 + `r summary(softwaremlr)$coefficients[3,1]`($\beta_{software3}$)software3 + `r summary(softwaremlr)$coefficients[4,1]`($\beta_{Sales Last Quarter}$)Sales Last Quarter. 
-
-> ii. What is the null hypothesis for testing whether software package has any effect on sales this quarter once you control for sales last quarter? 
-
-H0 = $\beta_{software2}$ = $\beta_{software3}$ = 0.
-
-> iii. Give the test statistic. 
-
-```{r fgen}
-softf <-
-  ftest(softwaremlr, matrix(c(0, 1, 0, 0, 0, 0, 1, 0), nrow = 2, byrow =
-                              TRUE))
+```{r ccor1}
+rate.code <- (rate-mean(rate))/0.4
+temp.code <- (temp-mean(temp))/10
+cor(cbind(rate.code,temp.code,rate.code^2,temp.code^2))
 ```
+In this new correlation matrix I do not obervs any high correlations and therefore signs of multicollinearity. 
 
-the F statistic for the general linear test is `r softf[1]`.
+## d.Fit a new full model with the scaled new predictor variables and report the estimated regression function
 
+```{r cmod1}
+mod2<-lm(cycles~rate.code+temp.code+I(rate.code^2)+I(temp.code^2)+I(rate.code*temp.code))
+summary(mod2)
 
-> iv. Give the p-value. 
-
-The p value for the general linear test is `r softf[4]`.
-
-> v. Do you reject H0 at α = 0.05? 
-
-No, `r softf[4]` > 0.05. 
-
-> vi. Are the results statistically significant at the 0.05 level? 
-
-No, `r softf[4]` > 0.05, so we fail to reject the null hypothesis and conclude that there is not evidence for the claim that the software package has an effect on sales this quarter once you control for sales last quarter. 
-
-> vii. What proportion of the remaining variation in sales this quarter is explained by software package once you allow for sales last quarter?
-
-```{r prsq}
-softwaremlrr <-
-  lm(SalesThisQuarter ~ SalesLastQuarter,
-     software)
+summary(mod2)$coeff[1,1]
 ```
-
-The proportion of the remaining  variation in sales this quarter explained by the software package controlling for last quarter's sales is `r rsq.partial(softwaremlr,softwaremlrr)$partial.rsq`. (Calculated using `rsp.partial`)
-
-## 1C. Fit a full model (with interaction) in which the slopes and intercepts of the regression lines relating sales last quarter to sales this quarter might depend on the kind of software the sales representatives are using.
-
-```{r MLRi}
-softwaremlri <- lm(SalesThisQuarter~as.factor(Software)*SalesLastQuarter,software)
-```
-> i. Write E(y/x). 
-
-E(y|x) = `r summary(softwaremlri)$coefficients[1,1]`($\beta_0$) + `r summary(softwaremlri)$coefficients[2,1]`($\beta_{software2}$)software2 + `r summary(softwaremlri)$coefficients[3,1]`($\beta_{software3}$)software3 + `r summary(softwaremlri)$coefficients[4,1]`($\beta_{Sales Last Quarter}$)Sales Last Quarter + `r summary(softwaremlri)$coefficients[5,1]`($\beta_{software2*Sales Last Quarter}$)software2&ast;Sales Last Quarter + `r summary(softwaremlri)$coefficients[6,1]`($\beta_{software3*Sales Last Quarter}$)software3&ast;Sales Last Quarter
-
-> ii. What is the null hypothesis for testing whether the three slopes are equal?
-
-H0 = $\beta_{software2*Sales Last Quarter}$ = $\beta_{software3*Sales Last Quarter}$ = 0.
-
-> iii. What is the null hypothesis for testing whether the effect of software program on sales this quarter depends on sales last quarter? 
-
-H0 = $\beta_{software2*Sales Last Quarter}$ = $\beta_{software3*Sales Last Quarter}$ = 0.
-
-### iv. Carry out an F-test to determine whether the effect of software type on sales depends on the representative's performance last quarter.
-
-```{r}
-tImatrix <- matrix(c(0,0,0,0,1,0,
-                     0,0,0,0,0,1), 
-                   nrow = 2,
-                   byrow = TRUE
-                   )
-```
-
-
-> A. Give the test statistic. 
-
-The test statistic (F) calculated by `ftest()` is `r ftest(softwaremlri,tImatrix)[1]`.
-
-> B. Give the p-value. 
-
-The p value (p) calculated by `ftest()` is `r ftest(softwaremlri,tImatrix)[4]`.
-
-> C. Do you reject H0 at α = 0.05? 
-
-As `r ftest(softwaremlri,tImatrix)[4]` < 0.05, we reject H0. 
-
-> D. Are the results statistically significant at the 0.05 level?
-
-As we reject the null hypothesis, we can conclude that our results are statistically significant at $\alpha$ = 0.05 and that there is evidence to support the claim that the effect of software type on sales depends on the representative's performance last quarter.
-
-> v. Estimate the slopes and intercepts of the three regression lines. 
-
-- E(SalesThisQuarter|Software = 1) = `r summary(softwaremlri)[[4]][1]` + `r summary(softwaremlri)[[4]][4]`&ast;SalesLastQuarter
-
-or $\beta_0$ + $\beta_{Sales Last Quarter}$&ast;Sales Last Quarter 
-
-- E(SalesThisQuarter|Software = 2) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][2]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][5]`&ast;SalesLastQuarter
-
-or $\beta_0$ + $\beta_{software2}$ + ($\beta_{Sales Last Quarter}$ + $\beta_{software2*Sales Last Quarter}$)&ast;Sales Last Quarter 
-
-- E(SalesThisQuarter|Software = 3) = `r summary(softwaremlri)[[4]][1] + summary(softwaremlri)[[4]][3]` + `r summary(softwaremlri)[[4]][4] + summary(softwaremlri)[[4]][6]`&ast;SalesLastQuarter
-
-or $\beta_0$ + $\beta_{software3}$ + ($\beta_{Sales Last Quarter}$ + $\beta_{software3*Sales Last Quarter}$)&ast;Sales Last Quarter 
-
-### vi. Test whether the slope is different from zero for software package two.
-
-> A. State the null hypothesis.
-
-H0: $\beta_{software2*Sales Last Quarter}$ + $\beta_{Sales Last Quarter}$ =0
-
-> B. Give the test statistic. 
-
-```{r scontrast}
-softs42 <- matrix(c(0,0,0,1,1,0),
-                  nrow=1,
-                  byrow = TRUE)
-```
-The F value is `r ftest(softwaremlri,softs42)[1]`.
-
-> C. Give the p-value. 
-
-The p value is `r ftest(softwaremlri,softs42)[4]`.
-
-> D. Do you reject H0 at α = 0.05? 
-
-As `r ftest(softwaremlri,softs42)[4]` > 0.05, we fail to reject H0.
-
-> E. Are the results statistically significant at the 0.05 level? 
-
-As we fail to reject the null hypothesis, we conclude that the results are not statistically significant and there is not evidence to support the claim that the slope is different from zero for software package two.
-
-## 1D. Test the hypothesis that you would test in order to answer this question: Controlling for sales last quarter, is average expected sales this quarter for software 1 and 3 different from expected sales this quarter for package 2? 
-
-H0: $\frac{\beta_{\text{software3*Sales Last Quarter}}}{2}$ + $\frac{\beta_{\text{software3}}}{2}$ = $\beta_{\text{software2*Sales Last Quarter}}$ + $\beta_{\text{software2}}$
-
-```{r btest}
-btest <- matrix(c(0,1,-1/2,0,1,-1/2),
-                  nrow=1,
-                  byrow = TRUE)
-ftest(softwaremlri,btest)
-```
-As $\alpha$ < 0.05, we reject the null hypothesis and conclude that there is evidence suggesting that controlling for sales last quarter, average expected sales this quarter for software 1 and 3 is different from expected sales this quarter for package 2.
-
-# Question 2 
-
-2. Pigs are routinely given large doses of antibiotics even when they show no signs of illness, to protect their health under unsanitary conditions. Pigs were randomly assigned to one of three antibiotic drugs. Dressed weight (weight of the pig after slaughter and removal of head, intestines and skin) was the dependent variable. Independent variables are Drug type, Mother's live adult weight and Father's live adult weight.
-
-```{r import2}
-library(readr)
-pigs <- as_tibble(read_table("Datasets/pig.txt",
-                             col_names = TRUE))
-pigs <- add_column(pigs,
-                   D_2 = ifelse(pigs$Drug == 2, 1, 0),
-                   D_3 = ifelse(pigs$Drug == 3, 1, 0))
-```
-
-> a. Write the regression equation for the full model, including error term.
-
-```{r fullmodel}
-pigsm <- lm(Pigweight~Momweight + Dadweight + D_2 + D_3,pigs)
-```
-The regression equation is
-
-E(Pigweight|x) = `r summary(pigsm)$coefficients[1,1]`($\beta_0$) + `r summary(pigsm)$coefficients[2,1]`($\beta_{Momweight}$)&ast;Momweight + `r summary(pigsm)$coefficients[3,1]`($\beta_{Dadweight}$)&ast;Dadweight + `r summary(pigsm)$coefficients[4,1]`($\beta_{drug2}$)&ast;Drug2+ `r summary(pigsm)$coefficients[5,1]`($\beta_{drug3}$)&ast;Drug3 + $\epsilon$
-
-> b. Make a table with one row for every drug, with columns showing how the dummy variables were defined. Make another column giving E(y/x) for each drug controlling other predictor variables.
-
-```{r ptable}
-ptable <- pigs %>% select(Drug, D_2, D_3) %>% distinct() %>%
-  
-  add_column("E(Y|x)" = c(
-    paste0(
-      round(summary(pigsm)$coefficients[1, 1], 3),
-      " + ",
-      round(summary(pigsm)$coefficients[2, 1], 3),
-      "*Momweight + ",
-      round(summary(pigsm)$coefficients[3, 1], 3),
-      "*Dadweight"
-    ),
-    paste0(
-      round(
-        summary(pigsm)$coefficients[1, 1] + summary(pigsm)$coefficients[4, 1],
-        3
-      ),
-      " + ",
-      round(summary(pigsm)$coefficients[2, 1], 3),
-      "*Momweight + ",
-      round(summary(pigsm)$coefficients[3, 1], 3),
-      "*Dadweight"
-    ),
-    paste0(
-      round(
-        summary(pigsm)$coefficients[1, 1] + summary(pigsm)$coefficients[5, 1],
-        3
-      ),
-      " + ",
-      round(summary(pigsm)$coefficients[2, 1], 3),
-      "*Momweight + ",
-      round(summary(pigsm)$coefficients[3, 1], 3),
-      "*Dadweight"
-    )
-  )
-  )
-
-ptable
-```
-
-
-> c. Predict the dressed weight of a pig getting Drug 2, whose mother weighed 140 pounds, and whose father weighed 185 pounds.
-
-```{r pred}
-pigpred <- tibble(
-  D_2=1,
-  D_3=0,
-  Momweight = 140,
-  Dadweight = 185
-)
-```
-The dressed weight of a pig getting Drug 2, whose mother weighed 140 pounds, and whose father weight 185 pounds is `r predict(pigsm,pigpred,interval = "prediction",level=0.95)[1]`, with a prediction interval of (`r predict(pigsm,pigpred,interval = "prediction",level=0.95)[2]`,`r predict(pigsm,pigpred,interval = "prediction",level=0.95)[3]` )
-	
-> d. This parallel plane regression model (no interaction model) specifies that the differences in expected weight for the different drug treatments are the same for every possible combination of mother's weight and father's weight. Give a 95% confidence interval for the difference in expected weight between drug treatments 1 and 2. Show your calculations.
-
-Null hypothesis: $\beta_{drug2}$ = 0. 
-
-So we can use the t value directly from the `summary()` output. Thus, using `confint()` with t = `r summary(pigsm)$coefficients[4,3]` and df = `r 70`, we derive a 95% confidence interval of (`r confint(pigsm,"D_2",evel=0.95)[1]`, `r confint(pigsm,"D_2",evel=0.95)[2]`)
-
-> e. In symbols, give the null and alternate hypotheses you would test to answer the following questions. Your answers are statements involving the $/beta$ values from your regression equation. Give the value of the t or F statistic (a number from the printout), and indicate whether or not you reject the null hypothesis.
-
-> i. Controlling for mother's weight and father's weight, does type of drug have an effect on the expected weight of a pig?
-
-```{r hi}
-pigshi <- matrix(c(0,0,0,1,0,
-                  0,0,0,0,1),
-                  nrow=2,
-                  byrow = TRUE)
-ftest(pigsm,pigshi)
-```
-
-H0: $\beta_{drug2}$ = $\beta_{drug3}$ = 0
-
-HA: At least $\beta_{drug2}$ or $\beta_{drug3}$ $\neq$ 0.
-
-F = `r ftest(pigsm,pigshi)[1]`
-
-As p< 0.05, we reject the null hypothesis and conclude that there is enough evidence to support the claim that type of drug does have an effect on the expected weight of a pig, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
-
-
-> ii. Controlling for mother's weight and father's weight, which drug helps the average pig gain more weight, Drug 1 or Drug 2?
-
-```{r hii}
-summary(pigsm)$coefficients
-```
-
-H0: $\beta_{drug2}$ = 0
-
-HA: $\beta_{drug2}$ $\neq$ 0.
-
-t = `r summary(pigsm)$coefficients[4,3]`
-
-As p< 0.05, we reject the null hypothesis and conclude that there is enough evidence to support the claim that Drug 1 helps the average pig gain more weight than Drug 2, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
-
-> iii. Controlling for mother's weight and father's weight, which drug helps the average pig gain more weight, Drug 1 or Drug 3?
-
-```{r hiii}
-summary(pigsm)$coefficients
-```
-
-H0: $\beta_{drug3}$ = 0
-
-HA: $\beta_{drug3}$ $\neq$ 0.
-
-t = `r summary(pigsm)$coefficients[5,3]`
-
-As p> 0.05, we fail to reject the null hypothesis and conclude that there is not enough evidence to support the claim that either Drug 1 or Drug 3 helps the average pig gain more weight, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
-
-> iv. Controlling for mother's weight and father's weight, which drug helps the average pig gain more weight, Drug 2 or Drug 3?
-
-```{r hiv}
-pigshiv <- matrix(c(0,0,0,1,-1),
-                  nrow=1,
-                  byrow = TRUE)
-ftest(pigsm,pigshiv)
-```
-
-H0: $\beta_{drug2}$ = $\beta_{drug3}$
-
-HA: $\beta_{drug2}$ $\neq$ $\beta_{drug3}$.
-
-F = `r ftest(pigsm,pigshiv)[1]`
-
-As p> 0.05, we fail to reject the null hypothesis and conclude that there is not enough evidence to support the claim that either Drug 2 or Drug 3 helps the average pig gain more weight, controlling for mother's weight and father's weight, at $\alpha$ = 0.05. 
+Cycles = `r summary(mod2)$coeff[1,1]` + `r summary(mod2)$coeff[2,1]`rate.code + `r summary(mod2)$coeff[3,1]`temp.code + `r summary(mod2)$coeff[4,1]`rate.code^2 + `r summary(mod2)$coeff[5,1]`temp.code^2 + `r summary(mod2)$coeff[6,1]`[rate.code * temp.code]
