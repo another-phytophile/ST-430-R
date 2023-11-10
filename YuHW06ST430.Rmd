@@ -12,6 +12,7 @@ output:
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(ggpmisc)
+#avis
 library(dplyr)
 library(tidyverse)
 library(tinytex)
