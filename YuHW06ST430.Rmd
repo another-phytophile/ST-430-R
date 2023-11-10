@@ -4,6 +4,8 @@ author: "Haozhe (Jerry) Yu"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
+    toc: true
+    highlight: dracula
     latex_engine: xelatex
 ---
 

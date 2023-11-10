@@ -6,3 +6,7 @@ install.packages("tinytex")
 install.packages("usethis")
 install.packages("lmtest")
 install.packages("car")
+install.packages("leaps")
+gitcreds::gitcreds_get(url="https://github.com/another-phytophile")
+help("gitcreds_set")
+gitcreds::gitcreds_set()g
