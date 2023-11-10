@@ -1,0 +1,8 @@
+install.packages("ggplot2")
+install.packages("ggpmisc")
+install.packages("dplyr")
+install.packages("tidyverse")
+install.packages("tinytex")
+install.packages("usethis")
+install.packages("lmtest")
+install.packages("car")
