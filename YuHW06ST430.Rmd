@@ -4,15 +4,12 @@ author: "Haozhe (Jerry) Yu"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
-    toc: true
-    highlight: dracula
     latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(ggpmisc)
-#avis
 library(dplyr)
 library(tidyverse)
 library(tinytex)
@@ -81,7 +78,7 @@ rate.code <- (rate-mean(rate))/0.4
 temp.code <- (temp-mean(temp))/10
 cor(cbind(rate.code,temp.code,rate.code^2,temp.code^2))
 ```
-In this new correlation matrix I do not obervs any high correlations and therefore signs of multicollinearity. 
+In this new correlation matrix I do not observe any high correlations and therefore signs of multicollinearity. 
 
 ## d.Fit a new full model with the scaled new predictor variables and report the estimated regression function
 
@@ -92,3 +89,192 @@ summary(mod2)
 summary(mod2)$coeff[1,1]
 ```
 Cycles = `r summary(mod2)$coeff[1,1]` + `r summary(mod2)$coeff[2,1]`rate.code + `r summary(mod2)$coeff[3,1]`temp.code + `r summary(mod2)$coeff[4,1]`rate.code^2 + `r summary(mod2)$coeff[5,1]`temp.code^2 + `r summary(mod2)$coeff[6,1]`[rate.code * temp.code]
+
+## (Goodness of fit) To test whether the second order polynomial regression function is good fit or not? Report the p-value and conclusion.
+
+```{r gof1}
+mod.full <- lm(cycles~0+factor(rate.code)+factor(temp.code)+
+                 factor(rate.code)*factor(temp.code))
+anova(mod2, mod.full)
+
+```
+p: 0.3738
+
+Conclusion: We fail to reject the null hypothesis and conclude that there is no lack of fit for this model. 
+
+## (Test higher order terms) The researcher wants to know whether a first-order model would be sufficient or not? Write the null and alternate hypothesis, p-value and conclusion.
+
+```{r red2}
+mod.linear <- lm(cycles~rate.code+temp.code)
+anova(mod.linear,mod2)
+```
+
+H0: $\beta_3$rate.code^2 = $\beta_4$temp.code^2 = $\beta_5$rate.code * temp.code = 0, aka 
+cycles = $\beta_{01}$ + $\beta_{11}$rate.code + $\beta_{21}$temp.code = $\beta_{02}$ + $\beta_{12}$rate.code + $\beta_{22}$temp.code + $\beta_3$(rate.code^2) + $\beta_4(temp.code^2)$ + $\beta_5$I(rate.code * temp.code)
+
+HA: at least 1 of $\beta_3$,$\beta_4$, or $\beta_5$ $\neq$ 0, so tghe 2 regression equations are not the same
+
+p: 0.5527
+
+Conclusion: At $\alpha$ = 0.05, p > $\alpha$ so we fail to reject the null hypothesis and conclude that there is no evidence to conclude that the linear model and the polynomial model are any different, and thus as the linear model is more straightforward, it should be used instead. 
+
+## Converting back to the original scale. 
+
+```{r conv1}
+cf <- coefficients(mod.linear)
+cf.rate <- cf["rate.code"]/0.4
+cf.rate
+cf.temp <- cf["temp.code"]/10
+cf.temp
+const <- cf[1] - cf[2]/0.4 - cf[3]*20/10
+const
+```
+## 90% Bonferroni’s Confidence interval for the estimate of the linear effects of the two predictor variables of the first order model
+
+```{r confint}
+ci <- confint(mod.linear, level = 0.95)
+ci["rate.code",] / 0.4
+ci["temp.code",] / 10
+```
+# Question 2
+
+A study obtained mortgage yields in n = 18 U.S. metropolitan areas in the 1960s.  The researcher obtained the following variables and fit a linear regression model to see which factors (variables) were associated with yield (each variable was obtained for each metro area):
+
+•	Y = Mortgage Yield (Interest Rate as a %)
+•	X1 = Average Loan/Mortgage Ratio (High Values • Low Down Payments/Higher Risk)
+•	X2 = Distance from Boston (in miles) – (Most of population was in Northeast in the 1960s)
+•	X3 = Savings per unit built (Measure of Available capital versus building rate)
+•	X4 = Savings per capita
+•	X5 = Population increase from 1950 to 1960 (%)
+•	X6 = Percent of first mortgage from inter-regional banks (Measures flow of money from outside SMSA)
+
+```{r import 2}
+city <- as_tibble(read.table("Datasets/city.txt", header=TRUE))
+```
+
+## Fit the Full Model
+
+```{r fullm}
+citym_f <- lm(Y~X1+X2+X3+X4+X5+X6,data=city)
+```
+
+###i. i.	Test whether any of the independent variables are associated with mortgage yield. What proportion of variation in Y is “explained” by the independent variables?
+
+As F = `r summary(citym_f)$fstatistic[1]`, and p is `r pf(summary(citym_f)$fstatistic[1],summary(citym_f)$fstatistic[2],summary(citym_f)$fstatistic[3],lower.tail = FALSE)` and p < $\alpha$ when $\alpha$ = 0.05, we reject the null hypothesis and conclude that at least one of the independent variables is associated with mortgage yield. The r^2 is `r summary(citym_f)$r.sq` so `r 100*summary(citym_f)$r.sq` percent of the variation in mortgage yield is associated with the independent variables, but as we have many predictors it would be better to use the Adjusted R^2 which is `r summary(citym_f)$adj.r.sq` which would indicate that `r 100*summary(citym_f)$adj.r.sq` percent of the variation in mortgage yield is associated with the independent variables. 
+
+###ii.) Obtain the parameter estimates and t-tests for the individual partial regression coefficient and test   individually for each variable (controlling for all others). 
+
+```{r tind2}
+sumt <- summary(citym_f)$coeff %>% as_tibble() 
+
+sumtfinal <- select(sumt,-"Std. Error") %>% add_column(
+  ifelse(
+    sumt$`Pr(>|t|)` < 0.05,
+    "Reject H0, controlling others this var is related to Y",
+    "Fail to Reject H0, controlling others this var is not related to Y"
+  ),
+  "Parameter" = c("Intercept", "X1", "X2", "X3", "X4", "X5", "X6")
+) %>% select("Parameter", everything())
+sumtfinal
+```
+### iii.	Obtain the partial sum of squares for each independent variable, and conduct the F-tests for individually for each variable (controlling for all others). Show that this is equivalent to the t-tests in the previous part.
+
+```{r F2}
+l1 <- as_tibble(t(ftest(citym_f,matrix(c(1,0,0,0,0,0,0),nrow=1))))
+l2 <- as_tibble(t(ftest(citym_f,matrix(c(0,0,1,0,0,0,0),nrow=1))))
+l3 <- as_tibble(t(ftest(citym_f,matrix(c(0,0,0,1,0,0,0),nrow=1))))
+l4 <- as_tibble(t(ftest(citym_f,matrix(c(0,0,0,0,1,0,0),nrow=1))))
+l5 <- as_tibble(t(ftest(citym_f,matrix(c(0,0,0,0,0,1,0),nrow=1))))
+l6 <- as_tibble(t(ftest(citym_f,matrix(c(0,0,0,0,0,0,1),nrow=1))))
+smuf <- tibble("Parameter"=c("X1","X2","X3","X4","X5","X6")) %>%  bind_cols(bind_rows(l1,l2,l3,l4,l5,l6) )
+smuf
+```
+
+The p values for both rows match.
+
+## b)	Test whether X2 (Distance from Boston), X5 (Population increase from 1950 to 1960), and X6 (Percent of first mortgage from inter-regional banks) are associated with mortgage yield, after controlling for X1, X3, and X4. 
+
+```{r spec}
+tm3 <- matrix(c(0,0,1,0,0,0,0,
+         0,0,0,0,0,1,0,
+         0,0,0,0,0,0,1),nrow=3,ncol=7,byrow=TRUE)
+ftest(citym_f,tm3)
+```
+As p > 0.05, we fail to reject the null hypothesis and conclude that controlling for X1,X3,and X4, X2,X5, and X6 are not significantly associated w Y. 
+
+## c)	Fit a first order model with all predictor variables. Use the regression subsets function in leaps package for the variable selection methods to determine the “best: model based on 
+
+Adjusted R2 
+Mallows Cp
+BIC criteria
+
+
+```{r fstorder}
+cityrefgull <- regsubsets(Y~X1+X2+X3+X4+X5+X6,data=city)
+rsum <- summary(cityrefgull)
+names(rsum)
+rsum$which
+
+par(mfrow = c(2,2))
+plot(rsum$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+adjr2_max<-which.max(rsum$adjr2)
+points(adjr2_max, rsum$adjr2[adjr2_max],col="green",cex = 2, pch = 20)
+
+plot(rsum$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
+cp_min = which.min(rsum$cp) # 7
+points(cp_min, rsum$cp[cp_min], col = "red", cex = 2, pch = 20)
+
+plot(rsum$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
+bic_min = which.min(rsum$bic) # 6
+points(bic_min, rsum$bic[bic_min], col = "turquoise", cex = 2, pch = 20)
+```
+The best model based on all 3 Model Selection Criteria is the one with 3 predictor variables, Y = b0 + b1X1 + b3X3 + b4X4. This is because it has the Highest Adj R^2, the Lowest Cp value, and the Lowest BIC value. 
+
+## d)	Fit a complete second-order model which contains all quadratic and cross-product terms. Use the regression subsets function in leaps package for the variable selection methods to determine the “best: model based on 
+
+1.	Adjusted R2 
+2.	Mallows Cp
+3.	BIC criteria
+
+```{r secondorder}
+cityrefgull2 <- regsubsets(Y~X1+X2+X3+X4+X5+X6+I(X1^2)+I(X2^2)+I(X3^2)+I(X4^2)+I(X5^2)+I(X6^2)+
+                             X1*X2 + X1*X3 + X1*X4 + X1*X5 + X1*X6 +
+                                     X2*X3 + X2*X4 + X2*X5 + X2*X6 + 
+                                             X3*X4 + X3*X5 + X3*X6 + 
+                                                     X4*X5 + X4*X6 + 
+                                                             X5*X6
+                           ,data=city)
+rsum2 <- summary(cityrefgull2)
+names(rsum2)
+rsum2$which
+
+par(mfrow = c(1,2))
+plot(rsum2$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+adjr2_max<-which.max(rsum2$adjr2)
+points(adjr2_max, rsum2$adjr2[adjr2_max],col="green",cex = 2, pch = 20)
+
+# plot(rsum2$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
+# cp_min = which.min(rsum2$cp) # 7
+# points(cp_min, rsum2$cp[cp_min], col = "red", cex = 2, pch = 20)
+
+plot(rsum2$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
+bic_min = which.min(rsum2$bic) # 6
+points(bic_min, rsum2$bic[bic_min], col = "turquoise", cex = 2, pch = 20)
+```
+
+The best model based on Adjusted R^2 and BIC Criteria is the one with all 8 variables, with he regression equation Y= b0 + b1X1 + b2X4 + b3X1^2 + b4X4^2 + b5X1$\ast$X3 + b6X1$\ast$X4 + b7X2$\ast$X3 +b8X3$\ast$X4. This had the highest r^2 and the lowest BIC, while Mallow's Cp was negative infinity for all of them, so not useful. 
+
+## e)	Pick one best model from part c and part d and find press statistic to pick the final model
+
+```{r}
+lm1 <- lm(Y~X1+X3+X4,data = city)
+lm2 <- lm(Y~X1+X4+I(X1^2) + I(X4^2) + X1*X3 + X1*X4 + X3*X4 + X2*X3,data=city)
+
+PRESS.statistic1 <- sum( (resid(lm1)/(1-hatvalues(lm1)))^2 )
+print(paste("PRESS statistic= ", PRESS.statistic1))
+
+PRESS.statistic2 <- sum( (resid(lm2)/(1-hatvalues(lm2)))^2 )
+print(paste("PRESS statistic= ", PRESS.statistic2))
+```
+
+The best first order model has the lower PRESS statistic, so I would pick it as the final model. 
