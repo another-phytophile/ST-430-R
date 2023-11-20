@@ -228,6 +228,22 @@ gender = factor(gender)
 surg.data1 <- surg.data[, seq(1, 4)] # new data set
 
 surm <- lm(sur_time~clot,surg.data)
+confint(surm)
+
+surmlrt <- lm(sur_time~clot+PI+liver+enzy,data=surg.data1)
+summary(surmlrt)
+2*(1-pt(-5.247,49,lower.tail = FALSE))
+qt(1-(.5*3.30e-06),49,lower.tail = FALSE)
+
+nrow <- data.frame("clot"=2,"PI"=0.6,"liver"=3,"enzy"=5)
+nrow
+confint(surmlrt,.95)
+
+qt(.05,3,lower.tail = FALSE)
+pt(2.353363,3)
+1-pf(27.4,4,49)
+qf(5.704e-12,4,49,lower.tail = FALSE)
+
 
 ssurm <- summary(surm)
 

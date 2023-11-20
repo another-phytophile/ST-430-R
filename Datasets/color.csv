@@ -1,0 +1,276 @@
+sub,wv,pH,abs
+Grape Skin Extract,400,3.5,0.24
+Grape Skin Extract,430,3.5,0.225
+Grape Skin Extract,460,3.5,0.243
+Grape Skin Extract,490,3.5,0.293
+Grape Skin Extract,520,3.5,0.348
+Grape Skin Extract,550,3.5,0.313
+Grape Skin Extract,580,3.5,0.198
+Grape Skin Extract,610,3.5,0.099
+Grape Skin Extract,640,3.5,0.044
+Grape Skin Extract,670,3.5,0.023
+Grape Skin Extract,700,3.5,0.015
+Grape Skin Extract,400,4.5,0.234
+Grape Skin Extract,430,4.5,0.208
+Grape Skin Extract,460,4.5,0.202
+Grape Skin Extract,490,4.5,0.208
+Grape Skin Extract,520,4.5,0.222
+Grape Skin Extract,550,4.5,0.23
+Grape Skin Extract,580,4.5,0.197
+Grape Skin Extract,610,4.5,0.127
+Grape Skin Extract,640,4.5,0.065
+Grape Skin Extract,670,4.5,0.034
+Grape Skin Extract,700,4.5,0.021
+Grape Skin Extract,400,6.5,0.303
+Grape Skin Extract,430,6.5,0.245
+Grape Skin Extract,460,6.5,0.219
+Grape Skin Extract,490,6.5,0.213
+Grape Skin Extract,520,6.5,0.21
+Grape Skin Extract,550,6.5,0.228
+Grape Skin Extract,580,6.5,0.235
+Grape Skin Extract,610,6.5,0.2
+Grape Skin Extract,640,6.5,0.142
+Grape Skin Extract,670,6.5,0
+Grape Skin Extract,700,6.5,0.026
+Grape Skin Extract,400,3.5,0.234
+Grape Skin Extract,430,3.5,0.214
+Grape Skin Extract,460,3.5,0.239
+Grape Skin Extract,490,3.5,0.282
+Grape Skin Extract,520,3.5,0.345
+Grape Skin Extract,550,3.5,0.307
+Grape Skin Extract,580,3.5,0.182
+Grape Skin Extract,610,3.5,0.093
+Grape Skin Extract,640,3.5,0.042
+Grape Skin Extract,670,3.5,0.02
+Grape Skin Extract,700,3.5,0.015
+Grape Skin Extract,400,4.5,0.235
+Grape Skin Extract,430,4.5,0.202
+Grape Skin Extract,460,4.5,0.203
+Grape Skin Extract,490,4.5,0.203
+Grape Skin Extract,520,4.5,0.221
+Grape Skin Extract,550,4.5,0.224
+Grape Skin Extract,580,4.5,0.192
+Grape Skin Extract,610,4.5,0.124
+Grape Skin Extract,640,4.5,0.065
+Grape Skin Extract,670,4.5,0.027
+Grape Skin Extract,700,4.5,0.019
+Grape Skin Extract,400,6.5,0.306
+Grape Skin Extract,430,6.5,0.245
+Grape Skin Extract,460,6.5,0.226
+Grape Skin Extract,490,6.5,0.215
+Grape Skin Extract,520,6.5,0.215
+Grape Skin Extract,550,6.5,0.223
+Grape Skin Extract,580,6.5,0.226
+Grape Skin Extract,610,6.5,0.194
+Grape Skin Extract,640,6.5,0.138
+Grape Skin Extract,670,6.5,0.085
+Grape Skin Extract,700,6.5,0.023
+Cochineal Extract,400,3.5,0.122
+Cochineal Extract,430,3.5,0.115
+Cochineal Extract,460,3.5,0.195
+Cochineal Extract,490,3.5,0.326
+Cochineal Extract,520,3.5,0.429
+Cochineal Extract,550,3.5,0.343
+Cochineal Extract,580,3.5,0.204
+Cochineal Extract,610,3.5,0.027
+Cochineal Extract,640,3.5,0.008
+Cochineal Extract,670,3.5,0.006
+Cochineal Extract,700,3.5,0.006
+Cochineal Extract,400,4.5,0.139
+Cochineal Extract,430,4.5,0.131
+Cochineal Extract,460,4.5,0.203
+Cochineal Extract,490,4.5,0.356
+Cochineal Extract,520,4.5,0.549
+Cochineal Extract,550,4.5,0.544
+Cochineal Extract,580,4.5,0.264
+Cochineal Extract,610,4.5,0.026
+Cochineal Extract,640,4.5,0.007
+Cochineal Extract,670,4.5,0.004
+Cochineal Extract,700,4.5,0.003
+Cochineal Extract,400,6.5,0.14
+Cochineal Extract,430,6.5,0.136
+Cochineal Extract,460,6.5,0.206
+Cochineal Extract,490,6.5,0.364
+Cochineal Extract,520,6.5,0.583
+Cochineal Extract,550,6.5,0.631
+Cochineal Extract,580,6.5,0.295
+Cochineal Extract,610,6.5,0.03
+Cochineal Extract,640,6.5,0.008
+Cochineal Extract,670,6.5,0.006
+Cochineal Extract,700,6.5,0.006
+Cochineal Extract,400,3.5,0.111
+Cochineal Extract,430,3.5,0.118
+Cochineal Extract,460,3.5,0.2
+Cochineal Extract,490,3.5,0.335
+Cochineal Extract,520,3.5,0.438
+Cochineal Extract,550,3.5,0.341
+Cochineal Extract,580,3.5,0.183
+Cochineal Extract,610,3.5,0.021
+Cochineal Extract,640,3.5,0.003
+Cochineal Extract,670,3.5,0.005
+Cochineal Extract,700,3.5,0.003
+Cochineal Extract,400,4.5,0.137
+Cochineal Extract,430,4.5,0.134
+Cochineal Extract,460,4.5,0.206
+Cochineal Extract,490,4.5,0.366
+Cochineal Extract,520,4.5,0.564
+Cochineal Extract,550,4.5,0.559
+Cochineal Extract,580,4.5,0.245
+Cochineal Extract,610,4.5,0.023
+Cochineal Extract,640,4.5,0.003
+Cochineal Extract,670,4.5,0.005
+Cochineal Extract,700,4.5,0.003
+Cochineal Extract,400,6.5,0.14
+Cochineal Extract,430,6.5,0.134
+Cochineal Extract,460,6.5,0.204
+Cochineal Extract,490,6.5,0.367
+Cochineal Extract,520,6.5,0.586
+Cochineal Extract,550,6.5,0.606
+Cochineal Extract,580,6.5,0.27
+Cochineal Extract,610,6.5,0.026
+Cochineal Extract,640,6.5,0.004
+Cochineal Extract,670,6.5,0.005
+Cochineal Extract,700,6.5,0.004
+Beet Juice,400,3.5,0.267
+Beet Juice,430,3.5,0.355
+Beet Juice,460,3.5,0.528
+Beet Juice,490,3.5,0.745
+Beet Juice,520,3.5,0.927
+Beet Juice,550,3.5,0.873
+Beet Juice,580,3.5,0.402
+Beet Juice,610,3.5,0.079
+Beet Juice,640,3.5,0.023
+Beet Juice,670,3.5,0.014
+Beet Juice,700,3.5,0.01
+Beet Juice,400,4.5,0.271
+Beet Juice,430,4.5,0.4
+Beet Juice,460,4.5,0.637
+Beet Juice,490,4.5,0.856
+Beet Juice,520,4.5,0.986
+Beet Juice,550,4.5,0.913
+Beet Juice,580,4.5,0.404
+Beet Juice,610,4.5,0.067
+Beet Juice,640,4.5,0.018
+Beet Juice,670,4.5,0.011
+Beet Juice,700,4.5,0.011
+Beet Juice,400,6.5,0.258
+Beet Juice,430,6.5,0.381
+Beet Juice,460,6.5,0.626
+Beet Juice,490,6.5,0.849
+Beet Juice,520,6.5,0.977
+Beet Juice,550,6.5,0.906
+Beet Juice,580,6.5,0.406
+Beet Juice,610,6.5,0.073
+Beet Juice,640,6.5,0.024
+Beet Juice,670,6.5,0.017
+Beet Juice,700,6.5,0.014
+Beet Juice,400,3.5,0.258
+Beet Juice,430,3.5,0.329
+Beet Juice,460,3.5,0.478
+Beet Juice,490,3.5,0.694
+Beet Juice,520,3.5,0.89
+Beet Juice,550,3.5,0.847
+Beet Juice,580,3.5,0.387
+Beet Juice,610,3.5,0.074
+Beet Juice,640,3.5,0.019
+Beet Juice,670,3.5,0.011
+Beet Juice,700,3.5,0.008
+Beet Juice,400,4.5,0.268
+Beet Juice,430,4.5,0.392
+Beet Juice,460,4.5,0.617
+Beet Juice,490,4.5,0.822
+Beet Juice,520,4.5,0.972
+Beet Juice,550,4.5,0.903
+Beet Juice,580,4.5,0.399
+Beet Juice,610,4.5,0.065
+Beet Juice,640,4.5,0.015
+Beet Juice,670,4.5,0.01
+Beet Juice,700,4.5,0.008
+Beet Juice,400,6.5,0.259
+Beet Juice,430,6.5,0.378
+Beet Juice,460,6.5,0.613
+Beet Juice,490,6.5,0.832
+Beet Juice,520,6.5,0.965
+Beet Juice,550,6.5,0.897
+Beet Juice,580,6.5,0.401
+Beet Juice,610,6.5,0.074
+Beet Juice,640,6.5,0.024
+Beet Juice,670,6.5,0.014
+Beet Juice,700,6.5,0.01
+Beta carotene ,400,3.5,0.256
+Beta carotene ,430,3.5,0.427
+Beta carotene ,460,3.5,0.569
+Beta carotene ,490,3.5,0.558
+Beta carotene ,520,3.5,0.305
+Beta carotene ,550,3.5,0.168
+Beta carotene ,580,3.5,0.129
+Beta carotene ,610,3.5,0.106
+Beta carotene ,640,3.5,0.09
+Beta carotene ,670,3.5,0.078
+Beta carotene ,700,3.5,0.069
+Beta carotene ,400,4.5,0.259
+Beta carotene ,430,4.5,0.433
+Beta carotene ,460,4.5,0.577
+Beta carotene ,490,4.5,0.566
+Beta carotene ,520,4.5,0.307
+Beta carotene ,550,4.5,0.17
+Beta carotene ,580,4.5,0.13
+Beta carotene ,610,4.5,0.107
+Beta carotene ,640,4.5,0.091
+Beta carotene ,670,4.5,0.079
+Beta carotene ,700,4.5,0.07
+Beta carotene ,400,6.5,0.258
+Beta carotene ,430,6.5,0.431
+Beta carotene ,460,6.5,0.574
+Beta carotene ,490,6.5,0.562
+Beta carotene ,520,6.5,0.307
+Beta carotene ,550,6.5,0.169
+Beta carotene ,580,6.5,0.129
+Beta carotene ,610,6.5,0.107
+Beta carotene ,640,6.5,0.091
+Beta carotene ,670,6.5,0.079
+Beta carotene ,700,6.5,0.07
+Beta carotene ,400,3.5,0.257
+Beta carotene ,430,3.5,0.429
+Beta carotene ,460,3.5,0.543
+Beta carotene ,490,3.5,0.563
+Beta carotene ,520,3.5,0.308
+Beta carotene ,550,3.5,0.171
+Beta carotene ,580,3.5,0.13
+Beta carotene ,610,3.5,0.109
+Beta carotene ,640,3.5,0.091
+Beta carotene ,670,3.5,0.08
+Beta carotene ,700,3.5,0.07
+Beta carotene ,400,4.5,0.26
+Beta carotene ,430,4.5,0.437
+Beta carotene ,460,4.5,0.58
+Beta carotene ,490,4.5,0.569
+Beta carotene ,520,4.5,0.314
+Beta carotene ,550,4.5,0.175
+Beta carotene ,580,4.5,0.135
+Beta carotene ,610,4.5,0.112
+Beta carotene ,640,4.5,0.096
+Beta carotene ,670,4.5,0.084
+Beta carotene ,700,4.5,0.074
+Beta carotene ,400,6.5,0.261
+Beta carotene ,430,6.5,0.428
+Beta carotene ,460,6.5,0.574
+Beta carotene ,490,6.5,0.563
+Beta carotene ,520,6.5,0.309
+Beta carotene ,550,6.5,0.172
+Beta carotene ,580,6.5,0.132
+Beta carotene ,610,6.5,0.11
+Beta carotene ,640,6.5,0.094
+Beta carotene ,670,6.5,0.08
+Beta carotene ,700,6.5,0.071
+FD&C Red 40,400,3.5,0.383
+FD&C Red 40,430,3.5,0.463
+FD&C Red 40,460,3.5,0.796
+FD&C Red 40,490,3.5,1.407
+FD&C Red 40,520,3.5,1.272
+FD&C Red 40,550,3.5,0.79
+FD&C Red 40,580,3.5,0.104
+FD&C Red 40,610,3.5,0.006
+FD&C Red 40,640,3.5,0
+FD&C Red 40,670,3.5,0
+FD&C Red 40,700,3.5,0

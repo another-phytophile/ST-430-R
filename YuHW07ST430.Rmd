@@ -1,0 +1,54 @@
+---
+title: "YuHW07ST430"
+author: "Jerry Yu"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggpmisc)
+library(dplyr)
+library(tidyverse)
+library(tinytex)
+library(usethis)
+library(lmtest)
+library(car)
+library(rsq)
+library(leaps)
+ftest = function(model, L, h = 0)
+  # General linear test of H0: L beta = h
+{
+  BetaHat = model$coefficients
+  dimL = dim(L)
+  if (length(BetaHat) != dimL[2])
+    stop("Sizes of L and Beta are incompatible")
+  r = dimL[1]
+  if (qr(L)$rank != r)
+    stop("Rows of L must be linearly independent.")
+  out = numeric(4)
+  names(out) = c("F", "df1", "df2", "p-value")
+  dfe = df.residual(model)
+  diff = L %*% BetaHat - h
+  fstat = t(diff) %*% solve(L %*% vcov(model) %*% t(L)) %*% diff / r
+  # Note vcov = MSE * XtXinv
+  fstat = as.numeric(fstat)
+  out[1] = fstat
+  out[2] = r
+  out[3] = dfe
+  out[4] = 1 - pf(fstat, r, dfe)
+  return(out)
+} 
+```
+
+```{r import1}
+ucars <- read.csv("Datasets/Used_Cars.txt") %>% as_tibble()
+ucars
+```
+
+```{r import2}
+carp <- read.csv("Datasets/Car_Purchase.txt") %>% as_tibble()
+carp
+```
