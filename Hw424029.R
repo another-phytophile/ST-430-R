@@ -34,8 +34,8 @@ ggplot(colorb,aes(x=wv,y=abs))+
   ylab("Absorbance")+
   xlab("Wavelength")
 
-colorp <- subset(color,pH=3.5)
-colorp
+colorp <- subset(color,pH=="3.5")
+print(colorp,n=300)
 
 ggplot(colorp,aes(x=wv,y=abs))+
   geom_point(aes(color=sub)) +
@@ -53,8 +53,8 @@ cheat
 ggplot(cheat,aes(x=Heat,y=Abs))+
   geom_point(aes(color=Sub)) +
   labs(
-    title=paste("Figure 3: Heating Time vs Absorbance Value for FD&C Red 40 /n and Cochineal Extract"),
+    title=paste("Figure 3: Heating Time vs Absorbance Value for FD&C Red 40 and Cochineal Extract"),
     subtitle = paste("By Jerry Yu")
   ) + 
   ylab("Absorbance")+
-  xlab("HEating Time (min)")
+  xlab("Heating Time (min)")
