@@ -18,13 +18,14 @@ library(lmtest)
 library(car)
 library(rsq)
 library(leaps)
+library(gridExtra)
 ftest = function(model, L, h = 0)
   # General linear test of H0: L beta = h
 {
   BetaHat = model$coefficients
   dimL = dim(L)
   if (length(BetaHat) != dimL[2])
-    stop("Sizes of L and Beta are incompatible")
+    stop("sizes of L and Beta are incompatible")
   r = dimL[1]
   if (qr(L)$rank != r)
     stop("Rows of L must be linearly independent.")
@@ -45,8 +46,11 @@ ftest = function(model, L, h = 0)
 
 ```{r import1}
 ucars <- read.csv("Datasets/Used_Cars.txt") %>% as_tibble()
-ucars
 ```
+
+# Question 1
+
+## a)	Interpret each of the coefficients in the final model using proper units and a suitable increment (i.e. a 1-unit increase might be too small to consider for some of the terms in your model).  Also find and discuss a 95% CI for each predictor variables. 
 
 ```{r model1}
 attach(ucars)
@@ -54,23 +58,19 @@ ucarsfm <- lm(Asking.Price~Mileage + Price.New + Avg.Retail)
 summary(ucarsfm)
 
 avis <- confint(ucarsfm, level = 0.95) %>% as.data.frame()
-avis[2,2]
 ```
-# Question 1
 
-## a)	Interpret each of the coefficients in the final model using proper units and a suitable increment (i.e. a 1-unit increase might be too small to consider for some of the terms in your model).  Also find and discuss a 95% CI for each predictor variables. 
-
-- At a given Mileage and a given remaining loan value, an increase of 1000 dollars of the new price of the cars results in a $`r -1*summary(ucarsfm)[[4]][2,1]` decrease in the asking price of a car. 
+- At a given new price of a car and a given remaining loan value, an increase in 1000 miles driven on the car results in a $`r -1*summary(ucarsfm)[[4]][2,1]` decrease in the asking price of a car. 
 
 - The 95% CI for Mileage is (`r avis[2,1]`,`r avis[2,2]`). This means that we are 95% confident that the true mean slope of the Mileage variable is within the confidence interval. 
 
-- At a given new price of a car and a given remaining loan value, an increase in 1000 miles driven on the car results in a $`r 1000*summary(ucarsfm)[[4]][3,1]` decrease in the asking price of a car. 
+- At a given Mileage and a given Average Retail Price, an increase of 1000 dollars of the new price of the cars results in a $`r 1000*summary(ucarsfm)[[4]][3,1]` increase in the asking price of a car.
 
 - The 95% CI for Price when New is (`r avis[3,1]`,`r avis[3,2]`). This means that we are 95% confident that the true mean slope of the Car Price When New variable is within the confidence interval. 
 
-- At a given new price of a car and a given mileage, an increase in 100 dollars in the average retail price of the new car results in a $`r 100*summary(ucarsfm)[[4]][4,1]` decrease in the asking price of a car. 
+- At a given new price of a car and a given mileage, an increase in 100 dollars in the average retail price of the new car results in a $`r 100*summary(ucarsfm)[[4]][4,1]` increase in the asking price of a car. 
 
-- The 95% CI for Average Retail is (`r avis[2,1]`,`r avis[2,2]`). This means that we are 95% confident that the true mean slope of the Average NEw Retail Price variable is within the confidence interval. 
+- The 95% CI for Average Retail is (`r avis[4,1]`,`r avis[4,2]`). This means that we are 95% confident that the true mean slope of the Average New Retail Price variable is within the confidence interval. 
 
 ## b) Examine residual plots and a normal quantile plot of and comment on the adequacy of your model.   
 
@@ -107,17 +107,17 @@ Our Model does not seem adequate. There seems to be a slight fan shaped distribu
 ```{r bp1}
 ucarsfmbp <- bptest(ucarsfm,studentize = FALSE)
 ucarsfmbp 
-ucarsfmbp[[4]]
 ```
-H0: Equal Variance Among Errors (Homoscedasticity) 
-HA: Unequal Variance Among Errors (Heteroscedasticity)
-Statistic: `r ucarsfmbp[[1]]`
-Df: `r ucarsfmbp[[2]]`
-P Value: `r ucarsfmbp[[4]]`
+- H0: Equal Variance Among Errors (Homoscedasticity) 
+- HA: Unequal Variance Among Errors (Heteroscedasticity)
+- Statistic: `r ucarsfmbp[[1]]`
+- Df: `r ucarsfmbp[[2]]`
+- P Value: `r ucarsfmbp[[4]]`
+- Conclusion: Reject H0
 
 ## d)	Index Plot to test for Independence of errors and write your comments.
 
-```{r index}
+```{r index1}
 ggplot(ucarsfmr, aes(x = 1:length(resid), y = resid)) +
   geom_point(color = "aquamarine") +
   labs(x = "Index",
@@ -128,20 +128,20 @@ ggplot(ucarsfmr, aes(x = 1:length(resid), y = resid)) +
              linetype = "dotdash")
 ```
 
-The spread of the errors does not seem to have a pattern. Thus there is no evidence to support the claim that the erros are not independent. 
+The spread of the errors does not seem to have a pattern. Thus there is no evidence to support the claim that the errors are not independent. 
 
 ## e)	Conduct Durbin-Watson Test. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value. 
 
 ```{r dw1}
-dwtest(ucarsfm)
 ucarsfmw <-durbinWatsonTest(ucarsfm)
 ucarsfmw 
 ```
 
-H0: Errors are independent. (autocorrelation = 0)
-HA: Errors are not independent. (autocorrelation $\neq$ 0)
-Statistic: `r ucarsfmw[[2]]`
-P: `r ucarsfmw[[2]]`
+- H0: Errors are independent. (autocorrelation = 0)
+- HA: Errors are not independent. (autocorrelation $\neq$ 0)
+- Statistic: `r ucarsfmw[[2]]`
+- P: `r ucarsfmw[[3]]`
+- Conclusion" Reject H0
 
 ## f)	Give a Histogram of the residuals and write your comment. 
 
@@ -155,21 +155,20 @@ ggplot(data = ucarsfmrs, aes(x = resid)) +
   ylab("Count of Residuals")
 ```
 
-There seems to be a right skew of the data, with there being more extreme values on the high side of the residuals, around 4000. This indicates that there are likley outliers. 
+There seems to be a right skew of the data, with there being more extreme values on the high side of the residuals, around 4000. This indicates that there are likely outliers. 
 
 ## g)	Conduct a Shapiro-Wilk Test on the residuals. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value.  Give the p-value for this test and explain what this means in terms of our model assumptions.
 
 ```{r shapiro1}
 shap1 <- shapiro.test(ucarsfmrs$resid)
-shap1 %>% str()
-shap1[[2]]
+shap1 
 ```
 
-H0:The random error in our model is normally distributed. 
-HA: The random error in our model is not normally distributed. 
-Statistic: `r shap1[[1]]`
-P: `r shap1[[2]]`
-Conclusion: As `r shap1[[2]]` < 0.05, at $\alpha$ = 0.05 we conclude that there is evidence to support that the distribution of random error (residuals) in our model is not normal. 
+- H0:The random error in our model is normally distributed. 
+- HA: The random error in our model is not normally distributed. 
+- Statistic: `r shap1[[1]]`
+- P: `r shap1[[2]]`
+- Conclusion: As `r shap1[[2]]` < 0.05, at $\alpha$ = 0.05 we conclude that there is evidence to support that the distribution of random error (residuals) in our model is not normal. 
 
 ## h)	Check for large leverage points and identify the row numbers.
 
@@ -260,6 +259,286 @@ samp <- tibble("Mileage"=25,"Price.New" = 10000,"Avg.Retail"=11000)
 predict(ucarsfm,samp)
 ```
 Predicted Asking price is `r predict(ucarsfm,samp)`.
+
+# Question 2
+
+```{r import2}
+cpur <- model.matrix(~.,read.csv("Datasets/Car_Purchase.txt"))[,2:8] %>% as_tibble()
+```
+
+## 	a. Find the correlation matrix and comment on the use of the correlation (r)  as a measure of linear association between the response (Y) and the individual X_j's.   
+
+```{r cor2}
+cor(cpur)
+```
+
+We see high positive correlation between Price Paid and Income `r cor(cpur)[7,2]`, and a moderate positive correlation with Age `r cor(cpur)[7,3]`. The dummy variables for the categorical variables all appear to have relatively weak correlations.
+
+## b.	Examine a scatterplot matrix of Price.Paid (Y) and the numeric predictors.Comment on anything interesting you find by examining this plot.  You should comment/address the following:  
+- marginal/univariate distributions of Y and Xj's.
+- relationships between Y vs.Xj's
+- relationships between Xj's 
+- any unusual cases
+
+```{r scat2, warning=FALSE}
+cpurn <- cpur %>% select(c(Income,Age,Num.Kids,Price.Paid))
+p1 <- ggplot(data = cpurn, aes(x = Income)) +
+  geom_histogram(fill = "palegreen") +
+  labs(
+    title = paste("Distibution of Income"),
+    subtitle = "by Jerry Yu"
+  ) 
+p2 <- ggplot(data = cpurn, aes(x = Age)) +
+  geom_histogram(fill = "lightblue") +
+  labs(
+    title = paste("Distibution of Age"),
+    subtitle = "by Jerry Yu"
+  ) 
+p3 <- ggplot(data = cpurn, aes(x = Num.Kids)) +
+  geom_histogram(fill = "salmon") +
+  labs(
+    title = paste("Distibution of Num.Kids"),
+    subtitle = "by Jerry Yu"
+  ) 
+p4 <- ggplot(data = cpurn, aes(x = Price.Paid)) +
+  geom_histogram(fill = "violet") +
+  labs(
+    title = paste("Distibution of Price.Paid"),
+    subtitle = "by Jerry Yu"
+  ) 
+grid.arrange(p1,p2,p3,p4)
+pairs(cpurn)
+```
+
+Looking At the Marginal/Univariate Scatterplots of the Variables (not required, but I created them to better analyze the data) income has a right skew and Number of Kids has a left skew (as well as being discrete data). Age is a bit more spread out, as is Price Paid, though Price Paid also has a slight right skew. 
+
+Moving on to the Scatterplot Matrix, there seem to be varying levels of positive correlation between Price Paid (Y) and all of the predictor variables, the strongest being Income. This matches our correlation matrix. Meanwhile, there also seem to be positive correlations between the different X variables. Basically every graph in the matrix appears to show some level of positive linear correlation. This could be an indicator of multicollinearity. There do not seem to be any unusual cases in the scatterplot matrix or the single distributions. 
+
+## c.	Write out the full model using all available predictors. 
+
+A full first order linear model of Car Purchase would be
+
+Price Paid = $\beta_0$ + $\beta_1$$X_1$ + $\beta_2$$X_2$ + $\beta_3$$X_3$ + $\beta_4$$X_4$ + $\beta_5$$X_5$ + $\beta_6$$X_6$
+
+- Where $X_1$ = GenderM, a dummy variable where is Gender is Male GenderM=1
+- Where $X_2$ = Annual Income is $
+- Where $X_3$ = Age in Years
+- Where $X_4$ = MaritalS, a dummy variable where if Marital is Single then MaritalS =1 
+- Where $X_5$ = Number of Children
+- Where $X_6$ = College.DegYes, a dummy variable where if College.Deg is yes then College.DegYes =1 
+
+## d.	Which predictors/terms in model are statistically significant at the α=0.05 level?  
+
+```{r fullm2}
+cpurm <- lm(Price.Paid~ GenderM + Income + Age + MaritalS + Num.Kids + College.DegYes,cpur) 
+summary(cpurm)
+```
+According to the individual T tests, the 2 significant variables at $\alpha$ = 0.05 are Income, and College.DegYes. 
+
+## e.	Conduct a F-test for removing the insignificant terms from the full model.  
+
+```{r F2}
+avis2 <- matrix(c(0,1,0,0,0,0,0,
+                 0,0,0,1,0,0,0,
+                 0,0,0,0,1,0,0,
+                 0,0,0,0,0,1,0),
+                  nrow=4,
+                  byrow = TRUE)
+ftest(cpurm,avis2)
+```
+
+At $\alpha$ = 0.05, p > $\alpha$, so we fail to reject the null hypothesis and conclude that there is no statistically significant difference between the full and the reduced model, and thus go with the simpler reduced model. 
+
+## f.	Interpret each of the parameter estimates in the final model using proper units and increments.
+
+```{r pprint2}
+cpurf <- lm(Price.Paid ~ Income + College.DegYes,cpur)
+summary(cpurf)
+```
+
+- At a given College Degree (either Yes or No), an increase in 1000 dollars in Annual Income, Average Car Purchase Price will increase by `r 1000*summary(cpurf)$coeff[2,1]` dollars. 
+
+- At a Given Annual Income, people who gained a college degree will on average spend `r summary(cpurf)$coeff[3,1]` dollars more on a car than people without a college degree. 
+
+## g. Examine residual plots  and a normal quantile plot and comment on the adequacy of your model.   
+
+```{r 2 plots2}
+cpurfr <- tibble(
+  "fit" = cpurf$fitted.values,
+  "resid" = cpurf$residuals
+)
+
+ggplot(cpurfr,aes(x=fit,y=resid))+
+  geom_jitter(color="darkorchid")+
+  geom_hline(yintercept = 0, linetype="dotted")+
+  labs(title = paste("Q1: Residuals Versus Fitted Values for the Cpur Data Set"),
+         subtitle = "by Jerry Yu")+ 
+  theme(plot.title = element_text(size = 14))
+
+cpurfrs <- add_column(cpurfr, "rstandardized"=rstandard(cpurf))
+
+ggplot(data = cpurfrs, aes(sample = resid))+
+  geom_qq( color="deepskyblue")+
+  geom_qq_line( color="coral1")+
+  labs(
+    title = paste("Q1: Normal Quantile Plot of Residuals for Cpur \n Final Linear Regression Model"),
+    subtitle = "by Jerry Yu"
+  ) +
+  xlab("Theoretical Quantiles")+
+  ylab("Sample Quantiles")
+```
+
+There are no pattern or funnel shapes in the residual plots, so it unlikely that the error variance is linear and Homoscedastic (constant variance). The Normal Quantile Plot also does not have many values that deviate too much from the theoretical quantiles, so it likely that the distribution of the error is normal. Thus, since all of our assumptions are not broken, our model seems adquate at least in regards to linearity, constant variance (homoscedastic), and normality.  
+
+## h.	Conduct Breusch-Pagan Test for the constancy of the error variance. Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value.
+
+```{r bp2}
+cpurfbp <- bptest(cpurf,studentize = FALSE)
+cpurfbp
+```
+- H0: Equal Variance Among Errors (Homoscedasticity) 
+- HA: Unequal Variance Among Errors (Heteroscedasticity)
+- Statistic: `r cpurfbp[[1]]`
+- Df: `r cpurfbp[[2]]`
+- P Value: `r cpurfbp[[4]]`
+
+## i.	Index Plot to test for Independence of errors.
+
+```{r index2}
+ggplot(cpurfr, aes(x = 1:length(resid), y = resid)) +
+  geom_point(color = "cyan2") +
+  labs(x = "Index",
+       title = "Q1 Residual Time Sequence Plot for Cpur Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "forestgreen",
+             linetype = "dotdash",
+             size=1)
+```
+
+## j.	Conduct Durbin-Watson Test. Be sure to give an appropriate null and alternate hypothesis, test statistic, its associated degrees of freedom, and the p-value. 
+
+```{r dw2}
+cpurfw <-durbinWatsonTest(cpurf)
+cpurfw 
+```
+
+- H0: Errors are independent. (autocorrelation = 0)
+- HA: Errors are not independent. (autocorrelation $\neq$ 0)
+- Statistic: `r cpurfw[[2]]`
+- Df: `r summary(cpurf)$df[2]`
+- P: `r cpurfw[[3]]`
+
+## f)	Give a Histogram of the residuals and write your comment. 
+
+```{r density2, warning=FALSE}
+ggplot(data = cpurfrs, aes(x = resid)) +
+  geom_histogram(fill = "palegreen") +
+  labs(
+    title = paste("Histogram of Residuals for Data Set Cpur"),
+    subtitle = "by Jerry Yu"
+  ) +
+  ylab("Count of Residuals")
+```
+
+There seems to be a right skew of the residuals. There are what could possibly be a high and a low outlier with a residual value around -1600 and 6000, respectively.Overall though, the distirbution of the residuals still seems mostly normal, supporting our Normal Quantile Plot. 
+
+## l.	Conduct a Shapiro-Wilk Test on the residuals. Be sure to give an appropriate null and alternate hypothesis, test statistic and the p-value.  Give the p-value for this test and explain what this means in terms of our model assumptions.
+
+```{r shapiro2}
+shap1 <- shapiro.test(cpurfrs$resid)
+shap1
+```
+
+- H0:The random error in our model is normally distributed. 
+- HA: The random error in our model is not normally distributed. 
+- Statistic: `r shap1[[1]]`
+- P: `r shap1[[2]]`
+- Conclusion: As `r shap1[[2]]` > 0.05, at $\alpha$ = 0.05 we conclude that there is no evidence to support that the distribution of random error (residuals) in our model is not normal. 
+
+## m.	Check for large leverage points and identify the row numbers
+
+```{r lev2}
+# find critical value
+crit2 <- 2*summary(cpurf)$coeff %>% nrow() / nrow(ucars)
+# derive row numbers and hat values
+cpurfl <- add_column(cpur,"hatvalues"=hatvalues(cpurf),
+                       "rownum" = rownames(cpur))
+# plot
+ggplot(cpurfl, aes(x = 1:length(hatvalues), y = hatvalues)) +
+  geom_point(color = "coral1") +
+  labs(x = "Hat Values",
+       title = "Hatvalues Plot with Critical Value for Cpur Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = crit2,
+             color = "magenta3",
+             linetype = "dotdash",
+             size = 1) +
+  xlab("Index")
+# print row numbers for large leverage points
+cpurfl %>% subset(hatvalues> crit2) %>% select(c("rownum"))
+```
+
+## n.	Check for outliers
+
+```{r out2}
+# derive row numbers
+cpurfro <- add_column(cpur,"rstandardized"=rstandard(cpurf),
+                       "rownum" = rownames(cpur))
+# plot
+ggplot(cpurfrs, aes(x = fit, y = rstandardized)) +
+  geom_point(color = "aquamarine1") +
+  labs(x = "Index",
+       title = "Outlier Detection Plot with Standarized Residuals vs Fit",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = 0,
+             color = "salmon1",
+             linetype = "solid") +
+    geom_hline(yintercept = -2,
+             color = "orchid1",
+             linetype = "dashed",
+             size=1)+
+  geom_hline(yintercept = 2,
+             color = "orchid1",
+             linetype = "dashed",
+             size=1)
+# print row numbers for large leverage points
+cpurfro %>% subset(abs(rstandardized)> 2) %>% select(c("rownum"))
+```
+
+## o.	Check for influential points
+
+```{r inf2}
+# find cutoff value
+cutoff2 <- with(cpurf,4/df.residual)
+# derive row numbers and hat values
+cpurfc <- add_column(cpur,"Di"=cooks.distance(cpurf),
+                       "rownum" = rownames(cpur))
+# plot
+ggplot(cpurfc, aes(x = 1:length(Di), y = Di)) +
+  geom_point(color = "deeppink") +
+  labs(x = "Hat Values",
+       title = "Cook's Distance Plot with Critical Value for Cpur Data",
+       subtitle = "by Jerry Yu") +
+  geom_hline(yintercept = cutoff2,
+             color = "darkslateblue",
+             linetype = "dotdash",
+             size = 1) +
+  xlab("Index")
+# print row numbers for large leverage points
+cpurfc %>% subset(Di > cutoff2) %>% select(c("rownum"))
+```
+
+## p.	Compute Variance inflation factors (VIF) and comment on the degree of collinearity.
+
+```{r vif2}
+vif(cpurf)
+
+mean(vif(cpurf))
+```
+As none of the individual VIF values exceed 10, but the mean VIF exceeds 1, there is some evidence of multicollinearity in our model, but no variable stands out as being strongly multicollinear with the other variables (the VIFs are the same)
+
+
 
 
 
