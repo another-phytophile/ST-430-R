@@ -1,0 +1,19 @@
+file	percent	reads	taxon_id	taxon_name
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	6.487221	30895	1580	Levilactobacillus brevis
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	6.296352	29986	573	Klebsiella pneumoniae
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	4.330343	20623	1590	Lactiplantibacillus plantarum
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	2.993214	14255	2133947	Bradyrhizobium sp. MOS002
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	2.690638	12814	1290	Staphylococcus hominis
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	2.181445	10389	470	Acinetobacter baumannii
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	2.087585	9942	1613	Limosilactobacillus fermentum
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	1.560755	7433	27350	Puccinia striiformis
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	1.446108	6887	1624	Ligilactobacillus salivarius
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	1.421960	6772	45670	Salinicoccus roseus
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	0.939224	4473	1689834	Acidithiobacillus ferriphilus
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	0.724839	3452	562	Escherichia coli
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	0.662266	3154	4932	Saccharomyces cerevisiae
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	0.517382	2464	751969	Bowmanella dokdonensis
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	0.072442	345	10239	Viruses
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	56.926071	271107	NA	cannot be assigned to a (non-viral) species
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	8.662156	41253	NA	belong to a (non-viral) species with less than 0.5% of all reads
+/kb/module/work/tmp/output_1699829493534/kaiju_output/HighSalt_Week6_Reads_trim_reads_paired-1.kaiju	69.146931	1067343	NA	unclassified

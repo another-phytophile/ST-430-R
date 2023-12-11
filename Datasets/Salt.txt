@@ -1,0 +1,77 @@
+file	percent	reads	taxon_id	taxon_name
+Control_0Weeks	11.722405	39384	573	Klebsiella pneumoniae
+Control_0Weeks	7.848868	26370	1580	Levilactobacillus brevis
+Control_0Weeks	5.595705	18800	2133947	Bradyrhizobium sp. MOS002
+Control_0Weeks	5.064112	17014	1290	Staphylococcus hominis
+Control_0Weeks	4.182491	14052	470	Acinetobacter baumannii
+Control_0Weeks	2.991916	10052	27350	Puccinia striiformis
+Control_0Weeks	2.641292	8874	1624	Ligilactobacillus salivarius
+Control_0Weeks	0.046135	155	1613	Limosilactobacillus fermentum
+Control_0Weeks	2.561821	8607	45670	Salinicoccus roseus
+Control_0Weeks	1.855214	6233	1689834	Acidithiobacillus ferriphilus
+Control_0Weeks	1.367376	4594	562	Escherichia coli
+Control_0Weeks	1.328087	4462	1590	Lactiplantibacillus plantarum
+Control_0Weeks	0.988773	3322	751969	Bowmanella dokdonensis
+Control_0Weeks	0.866739	2912	158836	Enterobacter hormaechei
+Control_0Weeks	0.852750	2865	208348	Puccinia triticina
+Control_0Weeks	0.690534	2320	2913551	Shewanella sp. C32
+Control_0Weeks	0.577131	1939	52133	Acinetobacter venetianus
+Control_0Weeks	0.537247	1805	72581	Fredinandcohnia aciditolerans
+Control_0Weeks	0.072923	245	10239	Viruses
+Control_0Weeks	0.184242	619	4932	Saccharomyces cerevisiae
+Control_0Weeks	37.100414	124647	NA	cannot be assigned to a (non-viral) species
+Control_0Weeks	11.154203	37475	NA	belong to a (non-viral) species with less than 0.5% of all reads
+Control_0Weeks	80.862522	1419599	NA	unclassified
+HighSalt_6Weeks	6.487221	30895	1580	Levilactobacillus brevis
+HighSalt_6Weeks	6.296352	29986	573	Klebsiella pneumoniae
+HighSalt_6Weeks	4.330343	20623	1590	Lactiplantibacillus plantarum
+HighSalt_6Weeks	2.993214	14255	2133947	Bradyrhizobium sp. MOS002
+HighSalt_6Weeks	2.690638	12814	1290	Staphylococcus hominis
+HighSalt_6Weeks	2.181445	10389	470	Acinetobacter baumannii
+HighSalt_6Weeks	2.087585	9942	1613	Limosilactobacillus fermentum
+HighSalt_6Weeks	1.560755	7433	27350	Puccinia striiformis
+HighSalt_6Weeks	1.446108	6887	1624	Ligilactobacillus salivarius
+HighSalt_6Weeks	1.421960	6772	45670	Salinicoccus roseus
+HighSalt_6Weeks	0.939224	4473	1689834	Acidithiobacillus ferriphilus
+HighSalt_6Weeks	0.724839	3452	562	Escherichia coli
+HighSalt_6Weeks	0.662266	3154	4932	Saccharomyces cerevisiae
+HighSalt_6Weeks	0.517382	2464	751969	Bowmanella dokdonensis
+HighSalt_6Weeks	0.072442	345	10239	Viruses
+HighSalt_6Weeks	56.926071	271107	NA	cannot be assigned to a (non-viral) species
+HighSalt_6Weeks	8.662156	41253	NA	belong to a (non-viral) species with less than 0.5% of all reads
+HighSalt_6Weeks	69.146931	1067343	NA	unclassified
+LowSalt_6Weeks	7.506959	47141	1580	Levilactobacillus brevis
+LowSalt_6Weeks	4.956494	31125	1590	Lactiplantibacillus plantarum
+LowSalt_6Weeks	4.611888	28961	573	Klebsiella pneumoniae
+LowSalt_6Weeks	2.188979	13746	2133947	Bradyrhizobium sp. MOS002
+LowSalt_6Weeks	1.966355	12348	1290	Staphylococcus hominis
+LowSalt_6Weeks	1.636718	10278	470	Acinetobacter baumannii
+LowSalt_6Weeks	1.272207	7989	4932	Saccharomyces cerevisiae
+LowSalt_6Weeks	1.151818	7233	27350	Puccinia striiformis
+LowSalt_6Weeks	1.072991	6738	45670	Salinicoccus roseus
+LowSalt_6Weeks	1.049264	6589	1624	Ligilactobacillus salivarius
+LowSalt_6Weeks	0.892567	5605	1613	Limosilactobacillus fermentum
+LowSalt_6Weeks	0.722334	4536	1689834	Acidithiobacillus ferriphilus
+LowSalt_6Weeks	0.524075	3291	562	Escherichia coli
+LowSalt_6Weeks	0.093795	589	10239	Viruses
+LowSalt_6Weeks	62.435268	392071	NA	cannot be assigned to a (non-viral) species
+LowSalt_6Weeks	7.918289	49724	NA	belong to a (non-viral) species with less than 0.5% of all reads
+LowSalt_6Weeks	62.330824	1039086	NA	unclassified
+Control_6Weeks	7.899045	47772	1580	Levilactobacillus brevis
+Control_6Weeks	5.140530	31089	573	Klebsiella pneumoniae
+Control_6Weeks	3.889832	23525	1590	Lactiplantibacillus plantarum
+Control_6Weeks	2.462540	14893	2133947	Bradyrhizobium sp. MOS002
+Control_6Weeks	2.215674	13400	1290	Staphylococcus hominis
+Control_6Weeks	1.767083	10687	470	Acinetobacter baumannii
+Control_6Weeks	1.482683	8967	4932	Saccharomyces cerevisiae
+Control_6Weeks	1.293028	7820	27350	Puccinia striiformis
+Control_6Weeks	1.148678	6947	1624	Ligilactobacillus salivarius
+Control_6Weeks	1.135781	6869	45670	Salinicoccus roseus
+Control_6Weeks	0.779454	4714	1689834	Acidithiobacillus ferriphilus
+Control_6Weeks	0.760770	4601	1597	Lacticaseibacillus paracasei
+Control_6Weeks	0.584177	3533	562	Escherichia coli
+Control_6Weeks	0.410561	2483	1613	Limosilactobacillus fermentum
+Control_6Weeks	0.093091	563	10239	Viruses
+Control_6Weeks	61.135250	369735	NA	cannot be assigned to a (non-viral) species
+Control_6Weeks	8.212381	49667	NA	belong to a (non-viral) species with less than 0.5% of all reads
+Control_6Weeks	65.291923	1137700	NA	unclassified
